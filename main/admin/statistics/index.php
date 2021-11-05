@@ -794,6 +794,8 @@ switch ($report) {
             get_lang('Session'),
             get_lang('Course'),
             get_lang('CountUsers'),
+            get_lang('StartDate'),
+            get_lang('EndDate'),
         ];
 
         $columnModel = [
@@ -821,6 +823,20 @@ switch ($report) {
                 'name' => 'count',
                 'index' => 'count',
                 'width' => '50',
+                'align' => 'left',
+                'sortable' => 'false',
+            ],
+            [
+                'name' => 'access_start_date',
+                'index' => 'access_start_date',
+                'width' => '100',
+                'align' => 'left',
+                'sortable' => 'false',
+            ],
+            [
+                'name' => 'access_end_date',
+                'index' => 'access_end_date',
+                'width' => '100',
                 'align' => 'left',
                 'sortable' => 'false',
             ],
