@@ -44,6 +44,8 @@ switch ($action) {
                 get_lang('Session'),
                 get_lang('Course'),
                 get_lang('CountUsers'),
+                get_lang('StartDate'),
+                get_lang('EndDate'),
             ];
         }
 
