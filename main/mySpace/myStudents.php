@@ -2200,7 +2200,7 @@ if (!empty($sessionId)) {
 }
 
 $allow = api_get_configuration_value('allow_user_message_tracking');
-if ($allow && (api_is_drh() || api_is_platform_admin())) {
+if ($allow && (api_is_teacher() || api_is_drh() || api_is_platform_admin())) {
     if ($filterMessages) {
         $users = MessageManager::getUsersThatHadConversationWithUser($student_id, $coachAccessStartDate, $coachAccessEndDate);
     } else {
