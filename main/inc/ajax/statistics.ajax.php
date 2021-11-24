@@ -97,8 +97,8 @@ switch ($action) {
 
                 $row['course'] = $courseListInString;
                 $row['count'] = $result['count'];
-                $row['access_start_date'] = $session['access_start_date'];
-                $row['access_end_date'] = $session['access_end_date'];
+                $row['access_start_date'] = api_get_local_time($session['access_start_date']);
+                $row['access_end_date'] = api_get_local_time($session['access_end_date']);
                 $list[] = $row;
             }
         }
