@@ -4,12 +4,13 @@
 require_once __DIR__.'/../inc/global.inc.php';
 
 $allow = api_get_configuration_value('allow_user_message_tracking');
+$allowCoachs = api_get_configuration_value('allow_user_message_tracking_to_coachs');
 
 if (!$allow) {
     api_not_allowed(true);
 }
 
-$allowUser = api_is_platform_admin() || api_is_drh();
+$allowUser = api_is_platform_admin() || api_is_drh() || $allowCoachs ?? api_is_coach();
 
 if (!$allowUser) {
     api_not_allowed(true);
@@ -17,6 +18,12 @@ if (!$allowUser) {
 
 $fromUserId = isset($_GET['from_user']) ? (int) $_GET['from_user'] : 0;
 $toUserId = isset($_GET['to_user']) ? (int) $_GET['to_user'] : 0;
+
+if ($allowCoachs && api_is_coach()) {
+    if ($fromUserId != api_get_user_id() || $toUserId != api_get_user_id()) {
+        api_not_allowed(true);
+    }
+}
 
 $coachAccessStartDate = isset($_GET['start_date']) ? $_GET['start_date'] : null;
 $coachAccessEndDate = isset($_GET['end_date']) ? $_GET['end_date'] : null;

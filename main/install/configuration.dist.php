@@ -998,6 +998,10 @@ ALTER TABLE skill_rel_course ADD CONSTRAINT FK_E7CEC7FA613FECDF FOREIGN KEY (ses
 // affect privacy protection.
 //$_configuration['allow_user_message_tracking'] = false;
 
+// Allow coachs to see personal messages between them and a student.
+// Need $_configuration['allow_user_message_tracking'] = true;
+//$_configuration['allow_user_message_tracking_to_coachs'] = false;
+
 // Filter messages between a teacher and a student between the session start end dates
 // Need $_configuration['allow_user_message_tracking'] = true;
 //$_configuration['filter_interactivity_messages'] = false;
