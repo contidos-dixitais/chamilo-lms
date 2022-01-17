@@ -117,3 +117,16 @@
     </div>
 {% endif %}
 </div>
+
+<script>
+    $(function () {
+        setInterval(function () {
+        $.get(_p.web_plugin + 'bbb/ajax.php', {
+            a: 'keep_alive',
+            meeting: 0
+        }, function (response) {
+            console.log(new Date());
+        });
+        }, 300000);
+});
+</script>

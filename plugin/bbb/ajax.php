@@ -44,4 +44,7 @@ switch ($action) {
             echo json_encode(['url' => $url, 'link' => $link]);
         }
         break;
+    case 'keep_alive':
+        session_start();
+        break;
 }
