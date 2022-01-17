@@ -2227,7 +2227,7 @@ if ($allow && (api_is_drh() || api_is_platform_admin() || $allowCoachs ?? api_is
     $column = 0;
     $row++;
     foreach ($users as $userFollowed) {
-        if ($api_is_coach() && $userFollowed['user_id'] != api_get_user_id()) {
+        if ((!api_is_drh() && !api_is_platform_admin()) && $userFollowed['user_id'] != api_get_user_id()) {
             continue;
         }
 

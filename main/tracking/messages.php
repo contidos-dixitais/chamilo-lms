@@ -20,7 +20,7 @@ $fromUserId = isset($_GET['from_user']) ? (int) $_GET['from_user'] : 0;
 $toUserId = isset($_GET['to_user']) ? (int) $_GET['to_user'] : 0;
 
 if ($allowCoachs && api_is_coach()) {
-    if ($fromUserId != api_get_user_id() || $toUserId != api_get_user_id()) {
+    if ($fromUserId != api_get_user_id() && $toUserId != api_get_user_id()) {
         api_not_allowed(true);
     }
 }
