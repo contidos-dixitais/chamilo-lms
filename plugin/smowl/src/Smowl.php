@@ -1,0 +1,191 @@
+<?php
+
+use Chamilo\CoreBundle\Entity\Course;
+use Chamilo\CoreBundle\Entity\Session;
+use Chamilo\PluginBundle\Entity\Smowl\SmowlTool;
+use Chamilo\UserBundle\Entity\User;
+
+/**
+ * Class Smowl.
+ */
+class Smowl
+{
+    /**
+     * @param User         $user
+     * @param Course       $course
+     * @param Session|null $session    Optional.
+     * @param string       $domain     Optional. Institution domain.
+     *
+     * @return array
+     */
+    public static function getSubstitutableVariables(
+        User $user,
+        Course $course,
+        Session $session = null,
+        $domain = '',
+        SmowlTool $tool
+    ) {
+        return [
+            '$User.id' => $user->getId(),
+            '$User.image' => ['claim' => 'sub'],
+            '$User.username' => $user->getUsername(),
+            '$User.org' => false,
+            '$Person.sourcedId' => self::getPersonSourcedId($domain, $user),
+            '$Person.name.full' => $user->getFullname(),
+            '$Person.name.family' => $user->getLastname(),
+            '$Person.name.given' => $user->getFirstname(),
+            '$Person.address.street1' => $user->getAddress(),
+            '$Person.phone.primary' => $user->getPhone(),
+            '$Person.email.primary' => $user->getEmail(),
+            '$CourseSection.sourcedId' => ['claim' => '/claim/lis', 'property' => 'course_section_sourcedid'],
+            '$CourseSection.label' => $course->getCode(),
+            '$CourseSection.title' => $course->getTitle(),
+            '$CourseSection.longDescription' => $session && $session->getShowDescription()
+                ? $session->getDescription()
+                : false,
+            '$CourseSection.timeFrame.begin' => $session && $session->getDisplayStartDate()
+                ? $session->getDisplayStartDate()->format(DateTime::ATOM)
+                : '$CourseSection.timeFrame.begin',
+            '$CourseSection.timeFrame.end' => $session && $session->getDisplayEndDate()
+                ? $session->getDisplayEndDate()->format(DateTime::ATOM)
+                : '$CourseSection.timeFrame.end',
+            '$Result.sourcedId' => ['claim' => 'sub'],
+            '$ResourceLink.id' => ['claim' => '/claim/resource_link', 'property' => 'id'],
+            '$ResourceLink.title' => ['claim' => '/claim/resource_link', 'property' => 'title'],
+            '$ResourceLink.description' => ['claim' => '/claim/resource_link', 'property' => 'description'],
+        ];
+    }
+
+    /**
+     * @param array        $launchParams All params for launch.
+     * @param array        $customParams Custom params where search variables to substitute.
+     * @param User         $user
+     * @param Course       $course
+     * @param Session|null $session      Optional.
+     * @param string       $domain       Optional. Institution domain.
+     *
+     * @return array
+     */
+    public static function substituteVariablesInCustomParams(
+        array $launchParams,
+        array $customParams,
+        User $user,
+        Course $course,
+        Session $session = null,
+        $domain = '',
+        SmowlTool $tool
+    ) {
+        $substitutables = self::getSubstitutableVariables($user, $course, $session, $domain, $tool);
+        $variables = array_keys($substitutables);
+
+        foreach ($customParams as $customKey => $customValue) {
+            if (!in_array($customValue, $variables)) {
+                continue;
+            }
+
+            $substitute = $substitutables[$customValue];
+
+            if (is_array($substitute)) {
+                $substitute = current($substitute);
+
+                $substitute = $launchParams[$substitute];
+            }
+
+            $customParams[$customKey] = $substitute;
+        }
+
+        array_walk_recursive(
+            $customParams,
+            function (&$value) {
+                if (gettype($value) !== 'array') {
+                    $value = (string) $value;
+                }
+            }
+        );
+
+        return $customParams;
+    }
+
+    /**
+     * Generate a user sourced ID for LIS.
+     *
+     * @param string $domain
+     * @param User   $user
+     *
+     * @return string
+     */
+    public static function getPersonSourcedId($domain, User $user)
+    {
+        $sourceId = [$domain, $user->getId()];
+
+        return implode(':', $sourceId);
+    }
+
+    /**
+     * Generate a course sourced ID for LIS.
+     *
+     * @param string  $domain
+     * @param Course  $course
+     * @param Session $session Optional.
+     *
+     * @return string
+     */
+    public static function getCourseSectionSourcedId($domain, Course $course, Session $session = null)
+    {
+        $sourceId = [$domain, $course->getId()];
+
+        if ($session) {
+            $sourceId[] = $session->getId();
+        }
+
+        return implode(':', $sourceId);
+    }
+
+    /**
+     * @param int $length
+     *
+     * @return string
+     */
+    public static function generateClientId($length = 20)
+    {
+        $hash = md5(mt_rand().time());
+
+        $clientId = '';
+
+        for ($p = 0; $p < $length; $p++) {
+            $op = mt_rand(1, 3);
+
+            if ($op === 1) {
+                $char = chr(mt_rand(97, 97 + 25));
+            } elseif ($op === 2) {
+                $char = chr(mt_rand(65, 65 + 25));
+            } else {
+                $char = substr($hash, mt_rand(0, strlen($hash) - 1), 1);
+            }
+
+            $clientId .= $char;
+        }
+
+        return $clientId;
+    }
+
+    /**
+     * Validate the format ISO 8601 for date strings coming from JSON or JavaScript.
+     *
+     * @link https://www.myintervals.com/blog/2009/05/20/iso-8601-date-validation-that-doesnt-suck/ Pattern source.
+     *
+     * @param string $strDate
+     *
+     * @return bool
+     */
+    public static function validateFormatDateIso8601($strDate)
+    {
+        $pattern = '/^([\+-]?\d{4}(?!\d{2}\b))((-?)('
+            .'(0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W'
+            .'([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))('
+            .'[T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?'
+            .'([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/';
+
+        return preg_match($pattern, $strDate) !== false;
+    }
+}

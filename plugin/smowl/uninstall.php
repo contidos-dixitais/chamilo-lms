@@ -8,5 +8,9 @@
  *
  * @package chamilo.plugin.smowl
  */
-require_once __DIR__.'/config.php';
-SMOWLPlugin::create()->uninstall();
+
+if (!api_is_platform_admin()) {
+    die('You must have admin permissions to uninstall plugins');
+}
+
+SmowlPlugin::create()->uninstall();
