@@ -1,0 +1,42 @@
+<?php
+
+use Chamilo\PluginBundle\Entity\Smowl\SmowlTool;
+
+require_once __DIR__.'/../../main/inc/global.inc.php';
+
+api_protect_course_script(true);
+api_block_anonymous_users(true);
+
+$em = Database::getManager();
+
+/** @var SmowlTool $tool */
+$tool = isset($_GET['id'])
+    ? $em->find('ChamiloPluginBundle:Smowl\SmowlTool', $_GET['id'])
+    : null;
+
+if (!$tool) {
+    api_not_allowed(true);
+}
+
+$user = api_get_user_entity(api_get_user_id());
+
+ChamiloSession::write('lti_tool_login', $tool->getId());
+
+$params = [
+    'iss' => SmowlPlugin::getIssuerUrl(),
+    'target_link_uri' => $tool->getLaunchUrl(),
+    'login_hint' => SmowlPlugin::getLaunchUserIdClaim($tool, $user),
+    'smowl_message_hint' => $tool->getId(),
+];
+?>
+<!DOCTYPE html>
+<body>
+<form action="<?php echo $tool->getLoginUrl() ?>" method="post" name="smowl_login" id="smowl_login"
+      enctype="application/x-www-form-urlencoded" class="form-horizontal">
+    <?php foreach ($params as $name => $value) { ?>
+        <input type="hidden" name="<?php echo $name ?>" value="<?php echo $value ?>">
+    <?php } ?>
+</form>
+
+<script>document.smowl_login.submit();</script>
+</body>
