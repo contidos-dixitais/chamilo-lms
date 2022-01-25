@@ -41,66 +41,17 @@ if ($form->validate()) {
         ->setName($formValues['name'])
         ->setDescription(
             empty($formValues['description']) ? null : $formValues['description']
-        )
-        ->setCustomParams(
-            empty($formValues['custom_params']) ? null : $formValues['custom_params']
-        )
-        ->setDocumenTarget($formValues['document_target'])
-        ->setPrivacy(
-            !empty($formValues['share_name']),
-            !empty($formValues['share_email']),
-            !empty($formValues['share_picture'])
         );
 
     if (null === $tool->getParent()) {
         $tool->setLaunchUrl($formValues['launch_url']);
-
-        if ($tool->getVersion() === Smowl::V_1P1) {
-            $tool
-                ->setConsumerKey(
-                    empty($formValues['consumer_key']) ? null : $formValues['consumer_key']
-                )
-                ->setSharedSecret(
-                    empty($formValues['shared_secret']) ? null : $formValues['shared_secret']
-                );
-        } elseif ($tool->getVersion() === Smowl::V_1P3) {
-            $tool
-                ->setLoginUrl($formValues['login_url'])
-                ->setRedirectUrl($formValues['redirect_url'])
-                ->setAdvantageServices(
-                    [
-                        'ags' => isset($formValues['1p3_ags'])
-                            ? $formValues['1p3_ags']
-                            : SmowlAssignmentGradesService::AGS_NONE,
-                        'nrps' => $formValues['1p3_nrps'],
-                    ]
-                )
-                ->publicKey = $formValues['public_key'];
-        }
-
-        if (!empty($formValues['replacement_user_id'])) {
-            $tool->setReplacementForUserId($formValues['replacement_user_id']);
-        }
-    }
-
-    if (null === $tool->getParent() ||
-        (null !== $tool->getParent() && !$tool->getParent()->isActiveDeepLinking())
-    ) {
-        $tool->setActiveDeepLinking(!empty($formValues['deep_linking']));
     }
 
     if (null == $tool->getParent()) {
         /** @var SmowlTool $child */
         foreach ($tool->getChildren() as $child) {
             $child
-                ->setLaunchUrl($tool->getLaunchUrl())
-                ->setLoginUrl($tool->getLoginUrl())
-                ->setRedirectUrl($tool->getRedirectUrl())
-                ->setAdvantageServices(
-                    $tool->getAdvantageServices()
-                )
-                ->setDocumenTarget($tool->getDocumentTarget())
-                ->publicKey = $tool->publicKey;
+                ->setLaunchUrl($tool->getLaunchUrl());
 
             $em->persist($child);
 

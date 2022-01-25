@@ -19,7 +19,7 @@ if (!$tool) {
     api_not_allowed(true);
 }
 
-$imsSmowlPlugin = SmowlPlugin::create();
+$smowlPlugin = SmowlPlugin::create();
 
 $pageTitle = Security::remove_XSS($tool->getName());
 

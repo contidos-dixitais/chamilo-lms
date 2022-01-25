@@ -19,7 +19,7 @@ $redirectUri = empty($_REQUEST['redirect_uri']) ? '' : trim($_REQUEST['redirect_
 $state = empty($_REQUEST['state']) ? '' : trim($_REQUEST['state']);
 $nonce = empty($_REQUEST['nonce']) ? '' : trim($_REQUEST['nonce']);
 $loginHint = empty($_REQUEST['login_hint']) ? '' : trim($_REQUEST['login_hint']);
-$ltiMessageHint = empty($_REQUEST['lti_message_hint']) ? '' : trim($_REQUEST['lti_message_hint']);
+$smowlMessageHint = empty($_REQUEST['lti_message_hint']) ? '' : trim($_REQUEST['lti_message_hint']);
 
 $em = Database::getManager();
 
@@ -58,15 +58,15 @@ try {
         throw SmowlAuthException::invalidPrompt();
     }
 
-    $ltiToolLogin = ChamiloSession::read('lti_tool_login');
+    $smowlToolLogin = ChamiloSession::read('lti_tool_login');
 
-    if ($ltiToolLogin != $ltiMessageHint) {
+    if ($smowlToolLogin != $smowlMessageHint) {
         throw SmowlAuthException::invalidRequest();
     }
 
     /** @var SmowlTool $tool */
     $tool = $em
-        ->find('ChamiloPluginBundle:Smowl\SmowlTool', $ltiToolLogin);
+        ->find('ChamiloPluginBundle:Smowl\SmowlTool', $smowlToolLogin);
 
     if (empty($tool)) {
         throw SmowlAuthException::invalidRequest();
@@ -163,9 +163,6 @@ try {
     // LTI info
     $jwtContent['https://purl.imsglobal.org/spec/lti/claim/version'] = '1.3.0';
 
-    // Roles info
-    $jwtContent['https://purl.imsglobal.org/spec/lti/claim/roles'] = SmowlPlugin::getRoles($user);
-
     // Message type info
     $jwtContent['https://purl.imsglobal.org/spec/lti/claim/target_link_uri'] = $tool->getLaunchUrl();
 
@@ -248,18 +245,6 @@ try {
     // Custom params info
     $customParams = $tool->getCustomParamsAsArray();
 
-    if (!empty($customParams)) {
-        $jwtContent['https://purl.imsglobal.org/spec/lti/claim/custom'] = Smowl::substituteVariablesInCustomParams(
-            $jwtContent,
-            $customParams,
-            $user,
-            $course,
-            $session,
-            $platformDomain,
-            Smowl::V_1P3
-        );
-    }
-
     array_walk_recursive(
         $jwtContent,
         function (&$value) {
@@ -293,7 +278,7 @@ $formActionUrl = $tool->isActiveDeepLinking() ? $tool->getRedirectUrl() : $tool-
 ?>
 <!DOCTYPE html>
 <html>
-<form action="<?php echo $formActionUrl ?>" name="ltiLaunchForm" method="post">
+<form action="<?php echo $formActionUrl ?>" name="smowlLaunchForm" method="post">
     <?php foreach ($params as $name => $value) { ?>
     <input type="hidden" name="<?php echo $name ?>" value="<?php echo $value ?>">
     <?php } ?>

@@ -23,7 +23,7 @@ $is_allowedToEdit = $is_courseAdmin;
 $em = Database::getManager();
 /** @var \Chamilo\CoreBundle\Entity\Course $course */
 $course = $em->find('ChamiloCoreBundle:Course', api_get_course_int_id());
-$ltiToolRepo = $em->getRepository('ChamiloPluginBundle:Smowl\SmowlTool');
+$smowlToolRepo = $em->getRepository('ChamiloPluginBundle:Smowl\SmowlTool');
 
 $categories = Category::load(null, null, $course->getCode(), null, null, $sessionId);
 
@@ -61,25 +61,25 @@ $slcSmowlTools = $form->createElement('select', 'name', get_lang('Tool'));
 $form->insertElementBefore($slcSmowlTools, 'hid_category_id');
 $form->addRule('name', get_lang('ThisFieldIsRequired'), 'required');
 
-$ltiTools = $ltiToolRepo->findBy(['course' => $course, 'gradebookEval' => null]);
+$smowlTools = $smowlToolRepo->findBy(['course' => $course, 'gradebookEval' => null]);
 
-/** @var SmowlTool $ltiTool */
-foreach ($ltiTools as $ltiTool) {
-    $slcSmowlTools->addOption($ltiTool->getName(), $ltiTool->getId());
+/** @var SmowlTool $smowlTool */
+foreach ($smowlTools as $smowlTool) {
+    $slcSmowlTools->addOption($smowlTool->getName(), $smowlTool->getId());
 }
 
 if ($form->validate()) {
     $values = $form->exportValues();
 
-    /** @var SmowlTool $ltiTool */
-    $ltiTool = $ltiToolRepo->find($values['name']);
+    /** @var SmowlTool $smowlTool */
+    $smowlTool = $smowlToolRepo->find($values['name']);
 
-    if (!$ltiTool) {
+    if (!$smowlTool) {
         api_not_allowed();
     }
 
     $eval = new Evaluation();
-    $eval->set_name($ltiTool->getName());
+    $eval->set_name($smowlTool->getName());
     $eval->set_description($values['description']);
     $eval->set_user_id($values['hid_user_id']);
 
@@ -103,9 +103,9 @@ if ($form->validate()) {
 
     /** @var GradebookEvaluation $gradebookEval */
     $gradebookEval = $em->find('ChamiloCoreBundle:GradebookEvaluation', $eval->get_id());
-    $ltiTool->setGradebookEval($gradebookEval);
+    $smowlTool->setGradebookEval($gradebookEval);
 
-    $em->persist($ltiTool);
+    $em->persist($smowlTool);
     $em->flush();
 
     header('Location: '.Category::getUrl().'selectcat='.$eval->get_category_id());

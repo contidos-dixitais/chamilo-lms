@@ -22,7 +22,7 @@ try {
     }
 
     $request = Request::createFromGlobals();
-    $ltiToolId = $request->query->getInt('id');
+    $smowlToolId = $request->query->getInt('id');
     $sessionId = $request->query->getInt('session_id');
 
     if (empty($sessionId)) {
@@ -30,7 +30,7 @@ try {
     }
 
     /** @var SmowlTool $tool */
-    $tool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool', $ltiToolId);
+    $tool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool', $smowlToolId);
 
     if (!$tool) {
         throw new Exception($plugin->get_lang('NoTool'));

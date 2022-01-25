@@ -97,7 +97,6 @@ class SmowlTool
         $this->gradebookEval = null;
         $this->children = new ArrayCollection();
         $this->lineItems = new ArrayCollection();
-        $this->replacementParams = [];
     }
 
     /**
@@ -344,40 +343,6 @@ class SmowlTool
     public function setParent(SmowlTool $parent)
     {
         $this->parent = $parent;
-
-        $this->privacy = $parent->getPrivacy();
-
-        return $this;
-    }
-
-    /**
-     * Get privacy.
-     *
-     * @return null|string
-     */
-    public function getPrivacy()
-    {
-        return $this->privacy;
-    }
-
-    /**
-     * Set privacy.
-     *
-     * @param bool $shareName
-     * @param bool $shareEmail
-     * @param bool $sharePicture
-     *
-     * @return SmowlTool
-     */
-    public function setPrivacy($shareName = false, $shareEmail = false, $sharePicture = false)
-    {
-        $this->privacy = serialize(
-            [
-                'share_name' => $shareName,
-                'share_email' => $shareEmail,
-                'share_picture' => $sharePicture,
-            ]
-        );
 
         return $this;
     }

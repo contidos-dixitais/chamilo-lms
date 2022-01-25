@@ -19,16 +19,16 @@ $plugin = SmowlPlugin::create();
 $em = Database::getManager();
 /** @var Course $course */
 $course = $em->find('ChamiloCoreBundle:Course', api_get_course_int_id());
-/** @var SmowlTool|null $ltiTool */
-$ltiTool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool', $toolId);
+/** @var SmowlTool|null $smowlTool */
+$smowlTool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool', $toolId);
 
-if (!$ltiTool) {
+if (!$smowlTool) {
     api_not_allowed();
 }
 
 $consumer = new OAuthConsumer(
     $_POST['oauth_consumer_key'],
-    $ltiTool->getSharedSecret()
+    $smowlTool->getSharedSecret()
 );
 $hmacMethod = new OAuthSignatureMethod_HMAC_SHA1();
 
@@ -46,7 +46,7 @@ $contentItems = $contentItems['@graph'];
 foreach ($contentItems as $contentItem) {
     if ('SmowlLinkItem' === $contentItem['@type']) {
         if ('application/vnd.ims.lti.v1.ltilink' === $contentItem['mediaType']) {
-            $plugin->saveItemAsSmowlLink($contentItem, $ltiTool, $course);
+            $plugin->saveItemAsSmowlLink($contentItem, $smowlTool, $course);
 
             Display::addFlash(
                 Display::return_message($plugin->get_lang('ToolAdded'), 'success')
@@ -55,7 +55,7 @@ foreach ($contentItems as $contentItem) {
     }
 }
 
-$currentUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/start.php?id='.$ltiTool->getId();
+$currentUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/start.php?id='.$smowlTool->getId();
 ?>
 <!DOCTYPE html>
 <html>

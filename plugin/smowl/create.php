@@ -13,7 +13,7 @@ $plugin = SmowlPlugin::create();
 
 $em = Database::getManager();
 
-$form = new FrmAdd('ism_lti_create_tool');
+$form = new FrmAdd('smowl_create_tool');
 $form->build();
 
 if ($form->validate()) {
@@ -25,64 +25,10 @@ if ($form->validate()) {
         ->setDescription(
             empty($formValues['description']) ? null : $formValues['description']
         )
-        ->setCustomParams(
-            empty($formValues['custom_params']) ? null : $formValues['custom_params']
-        )
-        ->setDocumenTarget($formValues['document_target'])
-        ->setCourse(null)
-        ->setActiveDeepLinking(
-            isset($formValues['deep_linking'])
-        )
-        ->setPrivacy(
-            isset($formValues['share_name']),
-            isset($formValues['share_email']),
-            isset($formValues['share_picture'])
-        );
+        ->setCourse(null);
 
-    if (!empty($formValues['replacement_user_id'])) {
-        $externalTool->setReplacementForUserId($formValues['replacement_user_id']);
-    }
-
-    if (Smowl::V_1P3 === $formValues['version']) {
-        $externalTool
-            ->setVersion(Smowl::V_1P3)
-            ->setLaunchUrl($formValues['launch_url'])
-            ->setClientId(
-                Smowl::generateClientId()
-            )
-            ->setLoginUrl($formValues['login_url'])
-            ->setRedirectUrl($formValues['redirect_url'])
-            ->setAdvantageServices(
-                [
-                    'ags' => $formValues['1p3_ags'],
-                ]
-            )
-            ->publicKey = $formValues['public_key'];
-    } else {
-        if (empty($formValues['consumer_key']) && empty($formValues['shared_secret'])) {
-            try {
-                $launchUrl = $plugin->getLaunchUrlFromCartridge($formValues['launch_url']);
-            } catch (Exception $e) {
-                Display::addFlash(
-                    Display::return_message($e->getMessage(), 'error')
-                );
-
-                header('Location: '.api_get_path(WEB_PLUGIN_PATH).'smowl/admin.php');
-                exit;
-            }
-
-            $externalTool->setLaunchUrl($launchUrl);
-        } else {
-            $externalTool
-                ->setLaunchUrl($formValues['launch_url'])
-                ->setConsumerKey(
-                    empty($formValues['consumer_key']) ? null : $formValues['consumer_key']
-                )
-                ->setSharedSecret(
-                    empty($formValues['shared_secret']) ? null : $formValues['shared_secret']
-                );
-        }
-    }
+    $externalTool
+        ->setLaunchUrl($formValues['launch_url']);
 
     $em->persist($externalTool);
     $em->flush();

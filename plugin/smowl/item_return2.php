@@ -36,18 +36,18 @@ try {
     }
 
     $toolId = str_replace('tool:', '', $payload['https://purl.imsglobal.org/spec/lti-dl/claim/data']);
-    /** @var SmowlTool $ltiTool */
-    $ltiTool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool', $toolId);
+    /** @var SmowlTool $smowlTool */
+    $smowlTool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool', $toolId);
 
-    if (empty($ltiTool)) {
+    if (empty($smowlTool)) {
         throw new Exception('LTI tool not found');
     }
 
-    if ($payload['iss'] !== $ltiTool->getClientId()) {
+    if ($payload['iss'] !== $smowlTool->getClientId()) {
         throw new Exception('Consumer not valid');
     }
 
-    $decodedJwt = JWT::decode($jwt, $ltiTool->publicKey, ['RS256']);
+    $decodedJwt = JWT::decode($jwt, $smowlTool->publicKey, ['RS256']);
 
     if (empty($decodedJwt->{'https://purl.imsglobal.org/spec/lti-dl/claim/content_items'})) {
         throw new Exception('Content items are missing');
@@ -64,7 +64,7 @@ try {
                 continue;
         }
 
-        $contentItem->save($ltiTool, $course);
+        $contentItem->save($smowlTool, $course);
     }
 } catch (Exception $exception) {
     $message = Display::return_message($exception->getMessage(), 'error');

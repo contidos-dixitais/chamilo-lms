@@ -15,7 +15,7 @@ $plugin = SmowlPlugin::create();
 $webPluginPath = api_get_path(WEB_PLUGIN_PATH).'smowl/';
 
 $request = Request::createFromGlobals();
-$ltiToolId = $request->query->getInt('id');
+$smowlToolId = $request->query->getInt('id');
 
 $em = Database::getManager();
 
@@ -25,7 +25,7 @@ try {
     }
 
     /** @var SmowlTool $tool */
-    $tool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool',$ltiToolId);
+    $tool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool',$smowlToolId);
 
     if (!$tool) {
         throw new Exception($plugin->get_lang('NoTool'));

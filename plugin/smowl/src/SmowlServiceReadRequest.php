@@ -54,22 +54,22 @@ class SmowlServiceReadRequest extends SmowlServiceRequest
 
         $results = Result::load(null, $user->getId(), $evaluation->getId());
 
-        $ltiScore = '';
+        $smowlScore = '';
         $responseDescription = get_plugin_lang('ScoreNotSet', 'SmowlPlugin');
 
         if (!empty($results)) {
             /** @var Result $result */
             $result = $results[0];
-            $ltiScore = 0;
+            $smowlScore = 0;
 
             if (!empty($result->get_score())) {
-                $ltiScore = $result->get_score() / $evaluation->getMax();
+                $smowlScore = $result->get_score() / $evaluation->getMax();
             }
 
             $responseDescription = sprintf(
                 get_plugin_lang('ScoreForXUserIsYScore', 'SmowlPlugin'),
                 $user->getId(),
-                $ltiScore
+                $smowlScore
             );
         }
 
@@ -78,6 +78,6 @@ class SmowlServiceReadRequest extends SmowlServiceRequest
             ->setCodeMajor(SmowlServiceResponseStatus::CODEMAJOR_SUCCESS)
             ->setDescription($responseDescription);
 
-        $this->responseBodyParam = (string) $ltiScore;
+        $this->responseBodyParam = (string) $smowlScore;
     }
 }

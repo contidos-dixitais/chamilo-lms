@@ -285,11 +285,11 @@ class SmowlPlugin extends Plugin
 
     /**
      * @param Course     $course
-     * @param SmowlTool $ltiTool
+     * @param SmowlTool $smowlTool
      *
      * @return CTool
      */
-    public function findCourseToolByLink(Course $course, SmowlTool $ltiTool)
+    public function findCourseToolByLink(Course $course, SmowlTool $smowlTool)
     {
         $em = Database::getManager();
         $toolRepo = $em->getRepository('ChamiloCourseBundle:CTool');
@@ -298,7 +298,7 @@ class SmowlPlugin extends Plugin
         $cTool = $toolRepo->findOneBy(
             [
                 'cId' => $course,
-                'link' => self::generateToolLink($ltiTool),
+                'link' => self::generateToolLink($smowlTool),
             ]
         );
 
@@ -307,21 +307,17 @@ class SmowlPlugin extends Plugin
 
     /**
      * @param CTool      $courseTool
-     * @param SmowlTool $ltiTool
+     * @param SmowlTool $smowlTool
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function updateCourseTool(CTool $courseTool, SmowlTool $ltiTool)
+    public function updateCourseTool(CTool $courseTool, SmowlTool $smowlTool)
     {
         $em = Database::getManager();
 
-        $courseTool->setName($ltiTool->getName());
+        $courseTool->setName($smowlTool->getName());
 
-        if ('iframe' !== $ltiTool->getDocumentTarget()) {
-            $courseTool->setTarget('_blank');
-        } else {
-            $courseTool->setTarget('_self');
-        }
+        $courseTool->setTarget('_self');
 
         $em->persist($courseTool);
         $em->flush();
@@ -341,22 +337,22 @@ class SmowlPlugin extends Plugin
      * Add the course tool.
      *
      * @param Course     $course
-     * @param SmowlTool $ltiTool
+     * @param SmowlTool $smowlTool
      * @param bool       $isVisible
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function addCourseTool(Course $course, SmowlTool $ltiTool, $isVisible = true)
+    public function addCourseTool(Course $course, SmowlTool $smowlTool, $isVisible = true)
     {
         $cTool = $this->createLinkToCourseTool(
-            $ltiTool->getName(),
+            $smowlTool->getName(),
             $course->getId(),
             null,
-            self::generateToolLink($ltiTool)
+            self::generateToolLink($smowlTool)
         );
         $cTool
             ->setTarget(
-                $ltiTool->getDocumentTarget() === 'iframe' ? '_self' : '_blank'
+                $smowlTool->getDocumentTarget() === 'iframe' ? '_self' : '_blank'
             )
             ->setVisibility($isVisible);
 
@@ -370,23 +366,23 @@ class SmowlPlugin extends Plugin
      *
      * @param Course     $course
      * @param Session    $session
-     * @param SmowlTool $ltiTool
+     * @param SmowlTool $smowlTool
      * @param bool       $isVisible
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function addCourseSessionTool(Course $course, Session $session, SmowlTool $ltiTool, $isVisible = true)
+    public function addCourseSessionTool(Course $course, Session $session, SmowlTool $smowlTool, $isVisible = true)
     {
         $cTool = $this->createLinkToCourseTool(
-            $ltiTool->getName(),
+            $smowlTool->getName(),
             $course->getId(),
             null,
-            self::generateToolLink($ltiTool),
+            self::generateToolLink($smowlTool),
             $session->getId()
         );
         $cTool
             ->setTarget(
-                $ltiTool->getDocumentTarget() === 'iframe' ? '_self' : '_blank'
+                $smowlTool->getDocumentTarget() === 'iframe' ? '_self' : '_blank'
             )
             ->setVisibility($isVisible);
 
@@ -423,73 +419,6 @@ class SmowlPlugin extends Plugin
     }
 
     /**
-     * @param User $user
-     *
-     * @return array
-     */
-    public static function getRoles(User $user)
-    {
-        $roles = ['http://purl.imsglobal.org/vocab/lis/v2/system/person#User'];
-
-        if (DRH === $user->getStatus()) {
-            $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/membership#Mentor';
-            $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/institution/person#Mentor';
-
-            return $roles;
-        }
-
-        if (!api_is_allowed_to_edit(false, true)) {
-            $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/membership#Learner';
-            $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/institution/person#Student';
-
-            if ($user->getStatus() === INVITEE) {
-                $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/institution/person#Guest';
-            }
-
-            return $roles;
-        }
-
-        $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/institution/person#Instructor';
-        $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor';
-
-        if (api_is_platform_admin_by_id($user->getId())) {
-            $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/institution/person#Administrator';
-            $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#SysAdmin';
-            $roles[] = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#Administrator';
-        }
-
-        return $roles;
-    }
-
-    /**
-     * @param User         $user
-     *
-     * @return string
-     */
-    public static function getUserRoles(User $user)
-    {
-        if (DRH === $user->getStatus()) {
-            return 'urn:lti:role:ims/lis/Mentor';
-        }
-
-        if ($user->getStatus() === INVITEE) {
-            return 'Learner,urn:lti:role:ims/lis/Learner/GuestLearner';
-        }
-
-        if (!api_is_allowed_to_edit(false, true)) {
-            return 'Learner';
-        }
-
-        $roles = ['Instructor'];
-
-        if (api_is_platform_admin_by_id($user->getId())) {
-            $roles[] = 'urn:lti:role:ims/lis/Administrator';
-        }
-
-        return implode(',', $roles);
-    }
-
-    /**
      * @param int $userId
      *
      * @return string
@@ -516,23 +445,7 @@ class SmowlPlugin extends Plugin
             $tool = $tool->getParent();
         }
 
-        $replacement = $tool->getReplacementForUserId();
-
-        if (empty($replacement)) {
-            if ($tool->getVersion() === Smowl::V_1P1) {
-                return self::generateToolUserId($user->getId());
-            }
-
-            return (string) $user->getId();
-        }
-
-        $replaced = str_replace(
-            ['$User.id', '$User.username'],
-            [$user->getId(), $user->getUsername()],
-            $replacement
-        );
-
-        return $replaced;
+        return (string) $user->getId();
     }
 
     /**
@@ -589,12 +502,12 @@ class SmowlPlugin extends Plugin
     public function saveItemAsSmowlLink(array $contentItem, SmowlTool $baseSmowlTool, Course $course)
     {
         $em = Database::getManager();
-        $ltiToolRepo = $em->getRepository('ChamiloPluginBundle:Smowl\SmowlTool');
+        $smowlToolRepo = $em->getRepository('ChamiloPluginBundle:Smowl\SmowlTool');
 
         $url = empty($contentItem['url']) ? $baseSmowlTool->getLaunchUrl() : $contentItem['url'];
 
         /** @var SmowlTool $newSmowlTool */
-        $newSmowlTool = $ltiToolRepo->findOneBy(['launchUrl' => $url, 'parent' => $baseSmowlTool, 'course' => $course]);
+        $newSmowlTool = $smowlToolRepo->findOneBy(['launchUrl' => $url, 'parent' => $baseSmowlTool, 'course' => $course]);
 
         if (null === $newSmowlTool) {
             $newSmowlTool = new SmowlTool();
@@ -602,11 +515,6 @@ class SmowlPlugin extends Plugin
                 ->setLaunchUrl($url)
                 ->setParent(
                     $baseSmowlTool
-                )
-                ->setPrivacy(
-                    $baseSmowlTool->isSharingName(),
-                    $baseSmowlTool->isSharingEmail(),
-                    $baseSmowlTool->isSharingPicture()
                 )
                 ->setCourse($course);
         }
@@ -618,13 +526,6 @@ class SmowlPlugin extends Plugin
             ->setDescription(
                 !empty($contentItem['text']) ? $contentItem['text'] : null
             );
-
-        if (!empty($contentItem['custom'])) {
-            $newSmowlTool
-                ->setCustomParams(
-                    $newSmowlTool->encodeCustomParams($contentItem['custom'])
-                );
-        }
 
         $em->persist($newSmowlTool);
         $em->flush();
