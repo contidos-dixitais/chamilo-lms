@@ -40,8 +40,8 @@ class SmowlPlugin extends Plugin
 
         $settings = [
             'enabled' => 'boolean',
-            'entity_name' => 'string',
-            'license_key' => 'string',
+            'entity_name' => 'text',
+            'license_key' => 'text',
         ];
 
         parent::__construct($version, $author, $settings);

@@ -21,12 +21,10 @@ $platform = Database::getManager()
     ->findOneBy([]);
 
 $table = new HTML_Table(['class' => 'table table-striped']);
-$table->setHeaderContents(0, 0, $plugin->get_lang('KeyId'));
-$table->setHeaderContents(0, 1, $plugin->get_lang('PublicKey'));
-$table->setHeaderContents(0, 2, $plugin->get_lang('PrivateKey'));
+$table->setHeaderContents(0, 0, $plugin->get_lang('EntityName'));
+$table->setHeaderContents(0, 1, $plugin->get_lang('License'));
 $table->setCellContents(1, 0, $platform ? $platform->getEntityName() : '');
-$table->setCellContents(1, 1, $platform ? nl2br($platform->publicKey) : '');
-$table->setCellContents(1, 2, $platform ? nl2br($platform->getLicenseKey()) : '');
+$table->setCellContents(1, 1, $platform ? nl2br($platform->getLicenseKey()) : '');
 $table->updateCellAttributes(1, 1, ['style' => 'font-family: monospace; font-size: 10px;']);
 $table->updateCellAttributes(1, 2, ['style' => 'font-family: monospace; font-size: 10px;']);
 

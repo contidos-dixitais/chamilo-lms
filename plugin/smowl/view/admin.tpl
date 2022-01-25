@@ -70,8 +70,6 @@
     </tr>
 {% endmacro %}
 
-{{ 'SmowlDescription'|get_plugin_lang('SmowlPlugin') }}
-
 {% autoescape 'html' %}
     <div class="btn-toolbar">
         <a href="{{ _p.web_plugin }}smowl/platform.php" class="btn btn-link pull-right">
