@@ -452,36 +452,6 @@ class SmowlTool
     }
 
     /**
-     * @return bool
-     */
-    public function isSharingName()
-    {
-        $unserialize = $this->unserializePrivacy();
-
-        return (bool) $unserialize['share_name'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSharingEmail()
-    {
-        $unserialize = $this->unserializePrivacy();
-
-        return (bool) $unserialize['share_email'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSharingPicture()
-    {
-        $unserialize = $this->unserializePrivacy();
-
-        return (bool) $unserialize['share_picture'];
-    }
-
-    /**
      * @return SmowlTool|null
      */
     public function getParent()

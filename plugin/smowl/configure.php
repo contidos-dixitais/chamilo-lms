@@ -9,7 +9,7 @@ require_once __DIR__.'/../../main/inc/global.inc.php';
 api_protect_course_script();
 api_protect_teacher_script();
 
-$plugin = ImsLtiPlugin::create();
+$plugin = SmowlPlugin::create();
 $em = Database::getManager();
 $toolsRepo = $em->getRepository('ChamiloPluginBundle:Smowl\SmowlTool');
 
@@ -35,7 +35,7 @@ $categories = Category::load(null, null, $course->getCode());
 
 switch ($action) {
     case 'add':
-        $form = new \Chamilo\PluginBundle\ImsLti\Form\FrmAdd('ims_lti_add_tool', [], $baseTool);
+        $form = new \Chamilo\PluginBundle\Smowl\Form\FrmAdd('ims_lti_add_tool', [], $baseTool);
         $form->build();
 
         if ($baseTool) {
@@ -57,96 +57,23 @@ switch ($action) {
                 ->setDescription(
                     empty($formValues['description']) ? null : $formValues['description']
                 )
-                ->setCustomParams(
-                    empty($formValues['custom_params']) ? null : $formValues['custom_params']
-                )
                 ->setDocumenTarget($formValues['document_target'])
-                ->setCourse($course)
-                ->setPrivacy(
-                    !empty($formValues['share_name']),
-                    !empty($formValues['share_email']),
-                    !empty($formValues['share_picture'])
-                );
+                ->setCourse($course);
 
             if (!empty($formValues['replacement_user_id'])) {
                 $tool->setReplacementForUserId($formValues['replacement_user_id']);
             }
 
             if (!$baseTool) {
-                if (ImsLti::V_1P3 === $formValues['version']) {
-                    $tool
-                        ->setVersion(ImsLti::V_1P3)
-                        ->setLaunchUrl($formValues['launch_url'])
-                        ->setClientId(
-                            ImsLti::generateClientId()
-                        )
-                        ->setLoginUrl($formValues['login_url'])
-                        ->setRedirectUrl($formValues['redirect_url'])
-                        ->setAdvantageServices(
-                            [
-                                'ags' => isset($formValues['1p3_ags'])
-                                    ? $formValues['1p3_ags']
-                                    : LtiAssignmentGradesService::AGS_NONE,
-                                'nrps' => $formValues['1p3_nrps'],
-                            ]
-                        )
-                        ->publicKey = $formValues['public_key'];
-                } elseif (ImsLti::V_1P1 === $formValues['version']) {
-                    if (empty($formValues['consumer_key']) && empty($formValues['shared_secret'])) {
-                        try {
-                            $launchUrl = $plugin->getLaunchUrlFromCartridge($formValues['launch_url']);
-                        } catch (Exception $e) {
-                            Display::addFlash(
-                                Display::return_message($e->getMessage(), 'error')
-                            );
-
-                            header('Location: '.api_get_self().'?'.api_get_cidreq());
-                            exit;
-                        }
-
-                        $tool->setLaunchUrl($launchUrl);
-                    } else {
-                        $tool
-                            ->setLaunchUrl($formValues['launch_url'])
-                            ->setConsumerKey($formValues['consumer_key'])
-                            ->setSharedSecret($formValues['shared_secret']);
-                    }
-                }
-            }
-
-            if (null === $baseTool ||
-                ($baseTool && !$baseTool->isActiveDeepLinking())
-            ) {
                 $tool
-                    ->setActiveDeepLinking(
-                        !empty($formValues['deep_linking'])
-                    );
+                ->setLaunchUrl($formValues['launch_url'])
+                ->setLoginUrl($formValues['login_url'])
+                ->setRedirectUrl($formValues['redirect_url'])
+                ->publicKey = $formValues['public_key'];
             }
 
             $em->persist($tool);
             $em->flush();
-
-            if ($tool->getVersion() === ImsLti::V_1P3) {
-                $advServices = $tool->getAdvantageServices();
-
-                if (LtiAssignmentGradesService::AGS_NONE !== $advServices['ags']) {
-                    $lineItemResource = new LtiLineItemsResource(
-                        $tool->getId(),
-                        $course->getId()
-                    );
-                    $lineItemResource->createLineItem(
-                        ['label' => $tool->getName(), 'scoreMaximum' => 100]
-                    );
-
-                    Display::addFlash(
-                        Display::return_message($plugin->get_lang('GradebookEvaluationCreated'), 'success')
-                    );
-                }
-            }
-
-            if (!$tool->isActiveDeepLinking()) {
-                $plugin->addCourseTool($course, $tool);
-            }
 
             Display::addFlash(
                 Display::return_message($plugin->get_lang('ToolAdded'), 'success')
@@ -159,15 +86,15 @@ switch ($action) {
         $form->setDefaultValues();
         break;
     case 'edit':
-        /** @var ImsLtiTool|null $tool */
+        /** @var SmowlTool|null $tool */
         $tool = null;
 
         if (!empty($_REQUEST['id'])) {
-            $tool = $em->find('ChamiloPluginBundle:ImsLti\ImsLtiTool', (int) $_REQUEST['id']);
+            $tool = $em->find('ChamiloPluginBundle:Smowl\SmowlTool', (int) $_REQUEST['id']);
         }
 
         if (empty($tool) ||
-            !ImsLtiPlugin::existsToolInCourse($tool->getId(), $course)
+            !SmowlPlugin::existsToolInCourse($tool->getId(), $course)
         ) {
             api_not_allowed(
                 true,
@@ -206,26 +133,11 @@ switch ($action) {
             }
 
             if (null === $tool->getParent()) {
-                if ($tool->getVersion() === ImsLti::V_1P3) {
-                    $tool
-                        ->setLaunchUrl($formValues['launch_url'])
-                        ->setLoginUrl($formValues['login_url'])
-                        ->setRedirectUrl($formValues['redirect_url'])
-                        ->setAdvantageServices(
-                            [
-                                'ags' => isset($formValues['1p3_ags'])
-                                    ? $formValues['1p3_ags']
-                                    : LtiAssignmentGradesService::AGS_NONE,
-                                'nrps' => $formValues['1p3_nrps'],
-                            ]
-                        )
-                        ->publicKey = $formValues['public_key'];
-                } elseif ($tool->getVersion() === ImsLti::V_1P1) {
-                    $tool
-                        ->setLaunchUrl($formValues['launch_url'])
-                        ->setConsumerKey($formValues['consumer_key'])
-                        ->setSharedSecret($formValues['shared_secret']);
-                }
+                $tool
+                ->setLaunchUrl($formValues['launch_url'])
+                ->setLoginUrl($formValues['login_url'])
+                ->setRedirectUrl($formValues['redirect_url'])
+                ->publicKey = $formValues['public_key'];
             }
 
             $em->persist($tool);

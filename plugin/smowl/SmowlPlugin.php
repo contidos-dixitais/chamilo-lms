@@ -410,11 +410,6 @@ class SmowlPlugin extends Plugin
                 ->setParent(
                     $baseSmowlTool
                 )
-                ->setPrivacy(
-                    $baseSmowlTool->isSharingName(),
-                    $baseSmowlTool->isSharingEmail(),
-                    $baseSmowlTool->isSharingPicture()
-                )
                 ->setCourse($course);
         }
 
@@ -425,13 +420,6 @@ class SmowlPlugin extends Plugin
             ->setDescription(
                 !empty($contentItem['text']) ? $contentItem['text'] : null
             );
-
-        if (!empty($contentItem['custom'])) {
-            $newSmowlTool
-                ->setCustomParams(
-                    $newSmowlTool->encodeCustomParams($contentItem['custom'])
-                );
-        }
 
         $em->persist($newSmowlTool);
         $em->flush();
@@ -459,22 +447,6 @@ class SmowlPlugin extends Plugin
         }
 
         return new SimpleXMLElement($request);
-    }
-
-    /**
-     * @return smowlServiceResponse|null
-     */
-    public function processServiceRequest()
-    {
-        $xml = $this->getRequestXmlElement();
-
-        if (empty($xml)) {
-            return null;
-        }
-
-        $request = smowlServiceRequestFactory::create($xml);
-
-        return $request->process();
     }
 
     /**
