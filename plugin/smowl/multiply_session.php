@@ -115,10 +115,6 @@ try {
                 $em->persist($newTool);
                 $em->flush();
 
-                if ($tool->isActiveDeepLinking()) {
-                    continue;
-                }
-
                 $plugin->addCourseSessionTool(
                     $newSelectedCourse,
                     $session,

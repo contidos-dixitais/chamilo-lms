@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class SmowlPlugin extends Plugin
 {
     const MODALITY_COURSE = 'course';
-    const MODALITY_QUIZ_ = 'quiz';
+    const MODALITY_QUIZ = 'quiz';
     const MODALITY_TEST = 'test';
     const MODALITY_SURVEY = 'survey';
     const MODALITY_OTHER = 'other';
@@ -351,9 +351,6 @@ class SmowlPlugin extends Plugin
             self::generateToolLink($smowlTool)
         );
         $cTool
-            ->setTarget(
-                $smowlTool->getDocumentTarget() === 'iframe' ? '_self' : '_blank'
-            )
             ->setVisibility($isVisible);
 
         $em = Database::getManager();
@@ -381,9 +378,6 @@ class SmowlPlugin extends Plugin
             $session->getId()
         );
         $cTool
-            ->setTarget(
-                $smowlTool->getDocumentTarget() === 'iframe' ? '_self' : '_blank'
-            )
             ->setVisibility($isVisible);
 
         $em = Database::getManager();

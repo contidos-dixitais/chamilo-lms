@@ -2,6 +2,7 @@
 /* For license terms, see /license.txt */
 
 use Chamilo\PluginBundle\Entity\Smowl\SmowlTool;
+use Chamilo\PluginBundle\Entity\Smowl\Platform;
 
 require_once __DIR__.'/../../main/inc/global.inc.php';
 
@@ -11,6 +12,15 @@ $em = Database::getManager();
 
 /** @var SmowlTool $tool */
 $tool = isset($_GET['id']) ? $em->find('ChamiloPluginBundle:Smowl\SmowlTool', intval($_GET['id'])) : null;
+
+/** @var Platform $platform */
+$platform = Database::getManager()
+    ->getRepository('ChamiloPluginBundle:Smowl\Platform')
+    ->findOneBy([]);
+$entityName = $platform->getEntityName();
+$licenseKey = $platform->getLicenseKey();
+$courseCode = $tool->getCourse()->getCode();
+
 $user = api_get_user_entity(
     api_get_user_id()
 );
@@ -24,24 +34,19 @@ $smowlPlugin = SmowlPlugin::create();
 $pageTitle = Security::remove_XSS($tool->getName());
 
 
-$is1p3 = !empty($tool->publicKey) && !empty($tool->getClientId()) &&
-    !empty($tool->getLoginUrl()) && !empty($tool->getRedirectUrl());
-
-if ($is1p3) {
-    $launchUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/login.php?id='.$tool->getId();
-} else {
-    $launchUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/form.php?'.http_build_query(['id' => $tool->getId()]);
-}
-
-if ($tool->getDocumentTarget() == 'window') {
-    header("Location: $launchUrl");
-    exit;
-}
+$launchUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/form.php?'.http_build_query(['id' => $tool->getId()]);
 
 $template = new Template($pageTitle);
 $template->assign('tool', $tool);
 
 $template->assign('launch_url', $launchUrl);
+$template->assign('entity_name', $entityName);
+$template->assign('license_key', $licenseKey);
+$template->assign('modality', 'quiz');
+$template->assign('course_code', $courseCode);
+$template->assign('user_id', api_get_user_id());
+$template->assign('lang', api_get_language_isocode());
+$template->assign('course_link', "");
 
 $content = $template->fetch('smowl/view/start.tpl');
 

@@ -104,10 +104,6 @@ try {
                 $em->persist($newTool);
                 $em->flush();
 
-                if ($tool->isActiveDeepLinking()) {
-                    continue;
-                }
-
                 $plugin->addCourseTool(
                     api_get_course_entity($newSelectedCourseId),
                     $newTool,
