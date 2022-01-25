@@ -20,12 +20,6 @@ use PHPExiftool\Driver\Tag\MXF\ViewportAspectRatio;
 class SmowlTool
 {
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="public_key", type="text", nullable=true)
-     */
-    public $publicKey;
-    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -51,36 +45,6 @@ class SmowlTool
      * @ORM\Column(name="launch_url", type="string")
      */
     private $launchUrl = '';
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="consumer_key", type="string", nullable=true)
-     */
-    private $consumerKey = '';
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="shared_secret", type="string", nullable=true)
-     */
-    private $sharedSecret = '';
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="custom_params", type="text", nullable=true)
-     */
-    private $customParams = null;
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="active_deep_linking", type="boolean", nullable=false, options={"default": false})
-     */
-    private $activeDeepLinking = false;
-    /**
-     * @var null|string
-     *
-     * @ORM\Column(name="privacy", type="text", nullable=true, options={"default": null})
-     */
-    private $privacy = null;
     /**
      * @var Course|null
      *
@@ -115,32 +79,6 @@ class SmowlTool
      * @ORM\OneToMany(targetEntity="Chamilo\PluginBundle\Entity\Smowl\SmowlTool", mappedBy="parent")
      */
     private $children;
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="client_id", type="string", nullable=true)
-     */
-    private $clientId;
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="login_url", type="string", nullable=true)
-     */
-    private $loginUrl;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="redirect_url", type="string", nullable=true)
-     */
-    private $redirectUrl;
-
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="advantage_services", type="json", nullable=true)
-     */
-    private $advantageServices;
 
     /**
      * @var ArrayCollection
@@ -150,44 +88,15 @@ class SmowlTool
     private $lineItems;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="version", type="string", options={"default": "lti1p1"})
-     */
-    private $version;
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="launch_presentation", type="json")
-     */
-    private $launchPresentation;
-
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="replacement_params", type="json")
-     */
-    private $replacementParams;
-
-    /**
      * SmowlTool constructor.
      */
     public function __construct()
     {
         $this->description = null;
-        $this->customParams = null;
-        $this->activeDeepLinking = false;
         $this->course = null;
         $this->gradebookEval = null;
-        $this->privacy = null;
         $this->children = new ArrayCollection();
-        $this->consumerKey = null;
-        $this->sharedSecret = null;
         $this->lineItems = new ArrayCollection();
-        $this->version = \Smowl::V_1P1;
-        $this->launchPresentation = [
-            'document_target' => 'iframe',
-        ];
         $this->replacementParams = [];
     }
 
@@ -260,26 +169,6 @@ class SmowlTool
     }
 
     /**
-     * @return null|string
-     */
-    public function getCustomParams()
-    {
-        return $this->customParams;
-    }
-
-    /**
-     * @param null|string $customParams
-     *
-     * @return SmowlTool
-     */
-    public function setCustomParams($customParams)
-    {
-        $this->customParams = $customParams;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isGlobal()
@@ -313,7 +202,6 @@ class SmowlTool
     public function getCustomParamsAsArray()
     {
         $params = [];
-        $lines = explode("\n", $this->customParams);
         $lines = array_filter($lines);
 
         foreach ($lines as $line) {
@@ -366,57 +254,6 @@ class SmowlTool
         $newValue = preg_replace('/\s+/', ' ', $value);
 
         return trim($newValue);
-    }
-
-    /**
-     * @return array
-     */
-    public function parseCustomParams()
-    {
-        if (empty($this->customParams)) {
-            return [];
-        }
-
-        $params = [];
-        $strings = explode("\n", $this->customParams);
-
-        foreach ($strings as $string) {
-            if (empty($string)) {
-                continue;
-            }
-
-            $pairs = explode('=', $string, 2);
-            $key = self::filterSpecialChars($pairs[0]);
-            $value = $pairs[1];
-
-            $params['custom_'.$key] = $value;
-        }
-
-        return $params;
-    }
-
-    /**
-     * Get activeDeepLinking.
-     *
-     * @return bool
-     */
-    public function isActiveDeepLinking()
-    {
-        return $this->activeDeepLinking;
-    }
-
-    /**
-     * Set activeDeepLinking.
-     *
-     * @param bool $activeDeepLinking
-     *
-     * @return SmowlTool
-     */
-    public function setActiveDeepLinking($activeDeepLinking)
-    {
-        $this->activeDeepLinking = $activeDeepLinking;
-
-        return $this;
     }
 
     /**
@@ -492,44 +329,6 @@ class SmowlTool
     }
 
     /**
-     * @return bool
-     */
-    public function isSharingName()
-    {
-        $unserialize = $this->unserializePrivacy();
-
-        return (bool) $unserialize['share_name'];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function unserializePrivacy()
-    {
-        return \UnserializeApi::unserialize('not_allowed_classes', $this->privacy);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSharingEmail()
-    {
-        $unserialize = $this->unserializePrivacy();
-
-        return (bool) $unserialize['share_email'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSharingPicture()
-    {
-        $unserialize = $this->unserializePrivacy();
-
-        return (bool) $unserialize['share_picture'];
-    }
-
-    /**
      * @return SmowlTool|null
      */
     public function getParent()
@@ -546,49 +345,7 @@ class SmowlTool
     {
         $this->parent = $parent;
 
-        $this->sharedSecret = $parent->getSharedSecret();
-        $this->consumerKey = $parent->getConsumerKey();
         $this->privacy = $parent->getPrivacy();
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSharedSecret()
-    {
-        return $this->sharedSecret;
-    }
-
-    /**
-     * @param string $sharedSecret
-     *
-     * @return SmowlTool
-     */
-    public function setSharedSecret($sharedSecret)
-    {
-        $this->sharedSecret = $sharedSecret;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConsumerKey()
-    {
-        return $this->consumerKey;
-    }
-
-    /**
-     * @param string $consumerKey
-     *
-     * @return SmowlTool
-     */
-    public function setConsumerKey($consumerKey)
-    {
-        $this->consumerKey = $consumerKey;
 
         return $this;
     }
@@ -621,112 +378,6 @@ class SmowlTool
                 'share_picture' => $sharePicture,
             ]
         );
-
-        return $this;
-    }
-
-    /**
-     * Get loginUrl.
-     *
-     * @return null|string
-     */
-    public function getLoginUrl()
-    {
-        return $this->loginUrl;
-    }
-
-    /**
-     * Set loginUrl.
-     *
-     * @param string|null $loginUrl
-     *
-     * @return SmowlTool
-     */
-    public function setLoginUrl($loginUrl)
-    {
-        $this->loginUrl = $loginUrl;
-
-        return $this;
-    }
-
-    /**
-     * Get redirectUlr.
-     *
-     * @return string|null
-     */
-    public function getRedirectUrl()
-    {
-        return $this->redirectUrl;
-    }
-
-    /**
-     * Set redirectUrl.
-     *
-     * @param string|null $redirectUrl
-     *
-     * @return SmowlTool
-     */
-    public function setRedirectUrl($redirectUrl)
-    {
-        $this->redirectUrl = $redirectUrl;
-
-        return $this;
-    }
-
-    /**
-     * Get clientId.
-     *
-     * @return string
-     */
-    public function getClientId()
-    {
-        return $this->clientId;
-    }
-
-    /**
-     * Set clientId.
-     *
-     * @param string $clientId
-     *
-     * @return SmowlTool
-     */
-    public function setClientId($clientId)
-    {
-        $this->clientId = $clientId;
-
-        return $this;
-    }
-
-    /**
-     * Get advantageServices.
-     *
-     * @return array
-     */
-    public function getAdvantageServices()
-    {
-        if (empty($this->advantageServices)) {
-            $this->advantageServices = [];
-        }
-
-        return array_merge(
-            [
-                'ags' => \SmowlAssignmentGradesService::AGS_NONE,
-                'nrps' => \SmowlNamesRoleProvisioningService::NRPS_NONE,
-            ],
-            $this->advantageServices
-        );
-    }
-
-    /**
-     * Set advantageServices.
-     *
-     * @param array $advantageServices
-     *
-     * @return SmowlTool
-     */
-    public function setAdvantageServices($advantageServices)
-    {
-        $this->advantageServices = $advantageServices;
 
         return $this;
     }
@@ -801,99 +452,11 @@ class SmowlTool
     }
 
     /**
-     * Get version.
-     *
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set version.
-     *
-     * @param string $version
-     *
-     * @return SmowlTool
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVersionName()
-    {
-        if (\Smowl::V_1P1 === $this->version) {
-            return 'LTI 1.0 / 1.1';
-        }
-
-        return 'LTI 1.3';
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * @param string $target
-     *
-     * @return $this
-     */
-    public function setDocumenTarget($target)
-    {
-        $this->launchPresentation['document_target'] = in_array($target, ['iframe', 'window']) ? $target : 'iframe';
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDocumentTarget()
-    {
-        return $this->launchPresentation['document_target'] ?: 'iframe';
-    }
-
-    /**
-     * @return array
-     */
-    public function getLaunchPresentation()
-    {
-        return $this->launchPresentation;
-    }
-
-    /**
-     * @param string $replacement
-     *
-     * @return SmowlTool
-     */
-    public function setReplacementForUserId($replacement)
-    {
-        $this->replacementParams['user_id'] = $replacement;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getReplacementForUserId()
-    {
-        if (!empty($this->replacementParams['user_id'])) {
-            return $this->replacementParams['user_id'];
-        }
-
-        return null;
     }
 
     /**
