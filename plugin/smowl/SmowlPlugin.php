@@ -21,6 +21,12 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class SmowlPlugin extends Plugin
 {
+    const MODALITY_COURSE = 'course';
+    const MODALITY_QUIZ_ = 'quiz';
+    const MODALITY_TEST = 'test';
+    const MODALITY_SURVEY = 'survey';
+    const MODALITY_OTHER = 'other';
+    
     const TABLE_TOOL = 'plugin_smowl_tool';
     const TABLE_PLATFORM = 'plugin_smowl_platform';
 

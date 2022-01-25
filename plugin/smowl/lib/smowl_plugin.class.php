@@ -11,7 +11,7 @@
 /**
  * Proctorated exam plugin with Smowl
  */
-class SMOWLPlugin extends Plugin
+class SMOWLPluginOLD extends Plugin
 {
     const MODALITY_COURSE = 'course';
     const MODALITY_QUIZ_ = 'quiz';
@@ -20,7 +20,7 @@ class SMOWLPlugin extends Plugin
     const MODALITY_OTHER = 'other';
 
     /**
-     * SMOWLPlugin constructor.
+     * SMOWLPluginOLD constructor.
      */
     protected function __construct()
     {
@@ -38,7 +38,7 @@ class SMOWLPlugin extends Plugin
     }
 
     /**
-     * @return SMOWLPlugin|null
+     * @return SMOWLPluginOLD|null
      */
     public static function create()
     {
