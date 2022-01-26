@@ -98,6 +98,20 @@ try {
                 $em->remove($childInCourse);
             }
 
+             /** @var SmowlTool $childInCourse */
+             foreach ($tool->getChildrenInCourses($courseIdsToDelete) as $childInCourse) {
+                $toolLinks[] = "smowl/user_report.php?id={$childInCourse->getId()}";
+
+                $em->remove($childInCourse);
+            }
+
+            /** @var SmowlTool $childInCourse */
+            foreach ($tool->getChildrenInCourses($courseIdsToDelete) as $childInCourse) {
+                $toolLinks[] = "smowl/activity_report.php?id={$childInCourse->getId()}";
+
+                $em->remove($childInCourse);
+            }
+
             $em->flush();
 
             if (!empty($toolLinks)) {
@@ -130,6 +144,20 @@ try {
                 );
 
                 $plugin->addCourseSessionUserRegisterTool(
+                    $newSelectedCourse,
+                    $session,
+                    $newTool,
+                    $formValues['tool_visible']
+                );
+
+                $plugin->addCourseSessionUserReportTool(
+                    $newSelectedCourse,
+                    $session,
+                    $newTool,
+                    $formValues['tool_visible']
+                );
+
+                $plugin->addCourseSessionActivityReportTool(
                     $newSelectedCourse,
                     $session,
                     $newTool,
