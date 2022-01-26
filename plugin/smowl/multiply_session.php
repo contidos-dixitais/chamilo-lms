@@ -91,6 +91,13 @@ try {
                 $em->remove($childInCourse);
             }
 
+            /** @var SmowlTool $childInCourse */
+            foreach ($tool->getChildrenInCourses($courseIdsToDelete) as $childInCourse) {
+                $toolLinks[] = "smowl/register_user.php?id={$childInCourse->getId()}";
+
+                $em->remove($childInCourse);
+            }
+
             $em->flush();
 
             if (!empty($toolLinks)) {
@@ -116,6 +123,13 @@ try {
                 $em->flush();
 
                 $plugin->addCourseSessionTool(
+                    $newSelectedCourse,
+                    $session,
+                    $newTool,
+                    $formValues['tool_visible']
+                );
+
+                $plugin->addCourseSessionUserRegisterTool(
                     $newSelectedCourse,
                     $session,
                     $newTool,
