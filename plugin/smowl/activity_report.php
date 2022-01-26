@@ -20,6 +20,7 @@ $platform = Database::getManager()
 $entityName = $platform->getEntityName();
 $licenseKey = $platform->getLicenseKey();
 $courseCode = $tool->getCourse()->getCode();
+$courseId = $tool->getCourse()->getId();
 
 $user = api_get_user_entity(
     api_get_user_id()
@@ -57,6 +58,7 @@ $template->assign('entity_name', $entityName);
 $template->assign('license_key', $licenseKey);
 $template->assign('modality', 'quiz');
 $template->assign('course_code', $courseCode);
+$template->assign('course_id', $courseId);
 $template->assign('user_id', api_get_user_id());
 $template->assign('lang', api_get_language_isocode());
 $template->assign('users', $userList);

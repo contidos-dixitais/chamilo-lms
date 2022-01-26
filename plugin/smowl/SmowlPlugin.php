@@ -434,7 +434,7 @@ class SmowlPlugin extends Plugin
     public function addCourseUserReportTool(Course $course, SmowlTool $smowlTool, $isVisible = true)
     {
         $cTool = $this->createLinkToCourseTool(
-            'Gestión regitros SMOWL - '.$smowlTool->getName(),
+            'Gestión registros SMOWL - '.$smowlTool->getName(),
             $course->getId(),
             null,
             self::generateUserReportLink($smowlTool)
@@ -538,7 +538,7 @@ class SmowlPlugin extends Plugin
     public function addCourseSessionUserReportTool(Course $course, Session $session, SmowlTool $smowlTool, $isVisible = true)
     {
         $cTool = $this->createLinkToCourseTool(
-            'Gestión regitros SMOWL - '.$smowlTool->getName(),
+            'Gestión registros SMOWL - '.$smowlTool->getName(),
             $course->getId(),
             null,
             self::generateUserReportLink($smowlTool),
