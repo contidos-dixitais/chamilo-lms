@@ -71,3 +71,7 @@ $strings['ReplacementUserIdHelp'] = 'The current user_id (sub) in launch params 
 $strings['AddInCourses'] = 'Add in courses';
 $strings['AddInAllCourses'] = 'Add in all courses';
 $strings['AddInSessions'] = 'Add in sessions';
+$strings['RegisterUser'] = 'Roolup to the exam';
+$strings['ExamAccess'] = 'Exam access';
+$strings['UsersReports'] = 'User reports';
+$strings['ActivityReports'] = 'Activity reports';

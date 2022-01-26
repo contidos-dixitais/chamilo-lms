@@ -258,16 +258,7 @@ class SmowlPlugin extends Plugin
 
     private function removeTools()
     {
-        $sql = "DELETE FROM c_tool WHERE link LIKE 'smowl/start.php%' AND category = 'plugin'";
-        Database::query($sql);
-
-        $sql = "DELETE FROM c_tool WHERE link LIKE 'smowl/register_user.php%' AND category = 'plugin'";
-        Database::query($sql);
-
-        $sql = "DELETE FROM c_tool WHERE link LIKE 'smowl/users_report.php%' AND category = 'plugin'";
-        Database::query($sql);
-
-        $sql = "DELETE FROM c_tool WHERE link LIKE 'smowl/activity_report.php%' AND category = 'plugin'";
+        $sql = "DELETE FROM c_tool WHERE link LIKE 'smowl/menu.php%' AND category = 'plugin'";
         Database::query($sql);
     }
 
@@ -339,37 +330,7 @@ class SmowlPlugin extends Plugin
      */
     private static function generateToolLink(SmowlTool $tool)
     {
-        return 'smowl/start.php?id='.$tool->getId();
-    }
-
-    /**
-     * @param SmowlTool $tool
-     *
-     * @return string
-     */
-    private static function generateRegisterLink(SmowlTool $tool)
-    {
-        return 'smowl/register_user.php?id='.$tool->getId();
-    }
-
-    /**
-     * @param SmowlTool $tool
-     *
-     * @return string
-     */
-    private static function generateUserReportLink(SmowlTool $tool)
-    {
-        return 'smowl/user_report.php?id='.$tool->getId();
-    }
-
-    /**
-     * @param SmowlTool $tool
-     *
-     * @return string
-     */
-    private static function generateActivityReportLink(SmowlTool $tool)
-    {
-        return 'smowl/activity_report.php?id='.$tool->getId();
+        return 'smowl/menu.php?id='.$tool->getId();
     }
 
     /**
@@ -398,80 +359,6 @@ class SmowlPlugin extends Plugin
     }
 
     /**
-     * Add the course tool.
-     *
-     * @param Course     $course
-     * @param SmowlTool $smowlTool
-     * @param bool       $isVisible
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addCourseUserRegisterTool(Course $course, SmowlTool $smowlTool, $isVisible = true)
-    {
-        $cTool = $this->createLinkToCourseTool(
-            'Registro SMOWL - '.$smowlTool->getName(),
-            $course->getId(),
-            null,
-            self::generateRegisterLink($smowlTool)
-        );
-        $cTool
-            ->setVisibility($isVisible);
-
-        $em = Database::getManager();
-        $em->persist($cTool);
-        $em->flush();
-    }
-
-    /**
-     * Add the course tool.
-     *
-     * @param Course     $course
-     * @param SmowlTool $smowlTool
-     * @param bool       $isVisible
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addCourseUserReportTool(Course $course, SmowlTool $smowlTool, $isVisible = true)
-    {
-        $cTool = $this->createLinkToCourseTool(
-            'Gestión registros SMOWL - '.$smowlTool->getName(),
-            $course->getId(),
-            null,
-            self::generateUserReportLink($smowlTool)
-        );
-        $cTool
-            ->setVisibility($isVisible);
-
-        $em = Database::getManager();
-        $em->persist($cTool);
-        $em->flush();
-    }     
-    /**
-     * Add the course tool.
-     *
-     * @param Course     $course
-     * @param SmowlTool $smowlTool
-     * @param bool       $isVisible
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addCourseActivityReportTool(Course $course, SmowlTool $smowlTool, $isVisible = true)
-    {
-        $cTool = $this->createLinkToCourseTool(
-            'Informe actividad SMOWL - '.$smowlTool->getName(),
-            $course->getId(),
-            null,
-            self::generateActivityReportLink($smowlTool)
-        );
-        $cTool
-            ->setVisibility($isVisible);
-
-        $em = Database::getManager();
-        $em->persist($cTool);
-        $em->flush();
-    }
-
-    /**
      * Add the course session tool.
      *
      * @param Course     $course
@@ -488,87 +375,6 @@ class SmowlPlugin extends Plugin
             $course->getId(),
             null,
             self::generateToolLink($smowlTool),
-            $session->getId()
-        );
-        $cTool
-            ->setVisibility($isVisible);
-
-        $em = Database::getManager();
-        $em->persist($cTool);
-        $em->flush();
-    }
-
-    /**
-     * Add the course session tool.
-     *
-     * @param Course     $course
-     * @param Session    $session
-     * @param SmowlTool $smowlTool
-     * @param bool       $isVisible
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addCourseSessionUserRegisterTool(Course $course, Session $session, SmowlTool $smowlTool, $isVisible = true)
-    {
-        $cTool = $this->createLinkToCourseTool(
-            'Registro SMOWL - '.$smowlTool->getName(),
-            $course->getId(),
-            null,
-            self::generateRegisterLink($smowlTool),
-            $session->getId()
-        );
-        $cTool
-            ->setVisibility($isVisible);
-
-        $em = Database::getManager();
-        $em->persist($cTool);
-        $em->flush();
-    }
-
-    /**
-     * Add the course session tool.
-     *
-     * @param Course     $course
-     * @param Session    $session
-     * @param SmowlTool $smowlTool
-     * @param bool       $isVisible
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addCourseSessionUserReportTool(Course $course, Session $session, SmowlTool $smowlTool, $isVisible = true)
-    {
-        $cTool = $this->createLinkToCourseTool(
-            'Gestión registros SMOWL - '.$smowlTool->getName(),
-            $course->getId(),
-            null,
-            self::generateUserReportLink($smowlTool),
-            $session->getId()
-        );
-        $cTool
-            ->setVisibility($isVisible);
-
-        $em = Database::getManager();
-        $em->persist($cTool);
-        $em->flush();
-    }
-
-    /**
-     * Add the course session tool.
-     *
-     * @param Course     $course
-     * @param Session    $session
-     * @param SmowlTool $smowlTool
-     * @param bool       $isVisible
-     *
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addCourseSessionActivityReportTool(Course $course, Session $session, SmowlTool $smowlTool, $isVisible = true)
-    {
-        $cTool = $this->createLinkToCourseTool(
-            'Informe actividad SMOWL - '.$smowlTool->getName(),
-            $course->getId(),
-            null,
-            self::generateActivityReportLink($smowlTool),
             $session->getId()
         );
         $cTool

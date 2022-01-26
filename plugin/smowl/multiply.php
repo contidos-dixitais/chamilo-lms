@@ -82,27 +82,6 @@ try {
                 $em->remove($childInCourse);
             }
 
-            /** @var SmowlTool $childInCourse */
-            foreach ($tool->getChildrenInCourses($courseIdsToDelete) as $childInCourse) {
-                $toolLinks[] = "smowl/register_user.php?id={$childInCourse->getId()}";
-
-                $em->remove($childInCourse);
-            }
-
-            /** @var SmowlTool $childInCourse */
-            foreach ($tool->getChildrenInCourses($courseIdsToDelete) as $childInCourse) {
-                $toolLinks[] = "smowl/user_report.php?id={$childInCourse->getId()}";
-
-                $em->remove($childInCourse);
-            }   
-
-            /** @var SmowlTool $childInCourse */
-            foreach ($tool->getChildrenInCourses($courseIdsToDelete) as $childInCourse) {
-                $toolLinks[] = "smowl/activity_report.php?id={$childInCourse->getId()}";
-
-                $em->remove($childInCourse);
-            }
-
             $em->flush();
 
             if (!empty($toolLinks)) {
@@ -126,24 +105,6 @@ try {
                 $em->flush();
 
                 $plugin->addCourseTool(
-                    api_get_course_entity($newSelectedCourseId),
-                    $newTool,
-                    $formValues['tool_visible']
-                );
-
-                $plugin->addCourseUserRegisterTool(
-                    api_get_course_entity($newSelectedCourseId),
-                    $newTool,
-                    $formValues['tool_visible']
-                );
-
-                $plugin->addCourseUserReportTool(
-                    api_get_course_entity($newSelectedCourseId),
-                    $newTool,
-                    $formValues['tool_visible']
-                );
-
-                $plugin->addCourseActivityReportTool(
                     api_get_course_entity($newSelectedCourseId),
                     $newTool,
                     $formValues['tool_visible']

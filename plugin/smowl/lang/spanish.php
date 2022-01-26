@@ -40,3 +40,7 @@ $strings['NoAccessToUrl'] = 'Sin acceso a la URL';
 $strings['LaunchUrlNotFound'] = 'URL de lanzamiento no encontrada';
 $strings['YouNeedCreateTheGradebokInCourseFirst'] = 'Debe crear el libro de calificaciones del curso para usar este servicio siguiendo este enlace %s';
 $strings['AddInSessions'] = 'Añadir a sesiones';
+$strings['RegisterUser'] = 'Roolup to the exam';
+$strings['ExamAccess'] = 'Exam access';
+$strings['UsersReports'] = 'User reports';
+$strings['ActivityReports'] = 'Activity reports';
