@@ -40,26 +40,6 @@
                 </a>
             {% endif %}
 
-            {% if is_child %}
-                {% for category in categories %}
-                    {% set url_eval_params = null %}
-                    {% if tool.session is not empty %}
-                        {% if category.get_course_code == tool.course.code and category.get_session_id == tool.session.id %}
-                            {% set url_eval_params = {'selectcat': category.get_id, 'cidReq': tool.course.code, 'id_session': tool.session.id, 'gidReq': 0, 'gradebook': 0}|url_encode() %}
-                        {% endif %}
-                    {% else %}
-                        {% if category.get_course_code == tool.course.code %}
-                            {% set url_eval_params = {'selectcat': category.get_id, 'cidReq': tool.course.code, 'id_session': 0, 'gidReq': 0, 'gradebook': 0}|url_encode() %}
-                        {% endif %}
-                    {% endif %}
-                    {% if url_eval_params is not null %}
-                        <a href="{{ _p.web_plugin }}smowl/gradebook/add_eval.php?{{ url_eval_params }}">
-                            {{ 'gradebook.png'|img(22, 'MakeQualifiable'|get_lang) }}
-                        </a>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-
             <a href="{{ _p.web_plugin }}smowl/edit.php?{{ url_params }}">
                 {{ 'edit.png'|img(22, 'Edit'|get_lang) }}
             </a>
