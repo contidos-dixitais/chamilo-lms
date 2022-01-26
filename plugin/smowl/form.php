@@ -89,6 +89,6 @@ $smowlPlugin->removeUrlParamsFromLaunchParams($tool, $params);
         <input type="hidden" name="<?php echo $key ?>" value="<?php echo htmlspecialchars($value) ?>">
     <?php } ?>
 </form>
-<script>document.ltiLaunchForm.submit();</script>
+<script>document.smowlLaunchForm.submit();</script>
 </body>
 </html>

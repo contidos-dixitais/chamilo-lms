@@ -51,4 +51,4 @@ $content = $template->fetch('smowl/view/start.tpl');
 
 $template->assign('header', $pageTitle);
 $template->assign('content', $content);
-$template->display_one_col_template();
+$template->display_no_layout_template();
