@@ -45,7 +45,7 @@ $template->assign('modality', 'quiz');
 $template->assign('course_code', $courseCode);
 $template->assign('user_id', api_get_user_id());
 $template->assign('lang', api_get_language_isocode());
-$template->assign('course_link', "");
+$template->assign('course_link', api_get_course_url($courseCode, api_get_session_id()));
 
 $content = $template->fetch('smowl/view/register_user.tpl');
 

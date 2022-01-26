@@ -10,7 +10,7 @@
             <div class="caption">
                 <p class="text-center">
                     <a class="btn btn-default btn-sm"
-                       href="{{ regiser_user_url }}">Registrarse para acceder al examen</a>
+                       href="{{ register_user_url }}">Registrarse para acceder al examen</a>
                 </p>
             </div>
         </div>
