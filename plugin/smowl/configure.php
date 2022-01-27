@@ -69,6 +69,18 @@ switch ($action) {
         if ($form->validate()) {
             $formValues = $form->getSubmitValues();
 
+            $launchUrl = $formValues['launch_url'];
+
+            if(!empty($formValues['exerciseId'])) {
+                $exerciseId = $formValues['exerciseId'];
+
+                $exercise = new Exercise($courseInfo['real_id']);
+                $exercise->read($exerciseItem['iid']);
+
+                $launchUrl = api_get_path(WEB_CODE_PATH).
+                'exercise/overview.php?exerciseId='.$exerciseId.'&'.api_get_cidreq().'&id_session=0';
+            }
+
             $tool = new SmowlTool();
 
             if ($baseTool) {
@@ -85,7 +97,7 @@ switch ($action) {
 
             if (!$baseTool) {
                 $tool
-                ->setLaunchUrl($formValues['launch_url']);
+                ->setLaunchUrl($launchUrl);
             }
 
             $em->persist($tool);

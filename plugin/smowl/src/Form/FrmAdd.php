@@ -96,7 +96,7 @@ class FrmAdd extends FormValidator
 
             $this->addHtml('<div class="tool_type_external" style="display: none;">');
             if (null === $this->baseTool) {
-                $this->addUrl('launch_url', $plugin->get_lang('LaunchUrl'), true);
+                $this->addUrl('launch_url', $plugin->get_lang('LaunchUrl'), false);
             }
             $this->addHtml('</div>');
 
