@@ -57,96 +57,15 @@ switch ($action) {
                 ->setDescription(
                     empty($formValues['description']) ? null : $formValues['description']
                 )
-                ->setCustomParams(
-                    empty($formValues['custom_params']) ? null : $formValues['custom_params']
-                )
-                ->setDocumenTarget($formValues['document_target'])
-                ->setCourse($course)
-                ->setPrivacy(
-                    !empty($formValues['share_name']),
-                    !empty($formValues['share_email']),
-                    !empty($formValues['share_picture'])
-                );
-
-            if (!empty($formValues['replacement_user_id'])) {
-                $tool->setReplacementForUserId($formValues['replacement_user_id']);
-            }
+                ->setCourse($course);
 
             if (!$baseTool) {
-                if (Smowl::V_1P3 === $formValues['version']) {
-                    $tool
-                        ->setVersion(Smowl::V_1P3)
-                        ->setLaunchUrl($formValues['launch_url'])
-                        ->setClientId(
-                            Smowl::generateClientId()
-                        )
-                        ->setLoginUrl($formValues['login_url'])
-                        ->setRedirectUrl($formValues['redirect_url'])
-                        ->setAdvantageServices(
-                            [
-                                'ags' => isset($formValues['1p3_ags'])
-                                    ? $formValues['1p3_ags']
-                                    : SmowlAssignmentGradesService::AGS_NONE,
-                                'nrps' => $formValues['1p3_nrps'],
-                            ]
-                        )
-                        ->publicKey = $formValues['public_key'];
-                } elseif (Smowl::V_1P1 === $formValues['version']) {
-                    if (empty($formValues['consumer_key']) && empty($formValues['shared_secret'])) {
-                        try {
-                            $launchUrl = $plugin->getLaunchUrlFromCartridge($formValues['launch_url']);
-                        } catch (Exception $e) {
-                            Display::addFlash(
-                                Display::return_message($e->getMessage(), 'error')
-                            );
-
-                            header('Location: '.api_get_self().'?'.api_get_cidreq());
-                            exit;
-                        }
-
-                        $tool->setLaunchUrl($launchUrl);
-                    } else {
-                        $tool
-                            ->setLaunchUrl($formValues['launch_url'])
-                            ->setConsumerKey($formValues['consumer_key'])
-                            ->setSharedSecret($formValues['shared_secret']);
-                    }
-                }
-            }
-
-            if (null === $baseTool ||
-                ($baseTool && !$baseTool->isActiveDeepLinking())
-            ) {
                 $tool
-                    ->setActiveDeepLinking(
-                        !empty($formValues['deep_linking'])
-                    );
+                ->setLaunchUrl($formValues['launch_url']);
             }
 
             $em->persist($tool);
             $em->flush();
-
-            if ($tool->getVersion() === Smowl::V_1P3) {
-                $advServices = $tool->getAdvantageServices();
-
-                if (SmowlAssignmentGradesService::AGS_NONE !== $advServices['ags']) {
-                    $lineItemResource = new SmowlLineItemsResource(
-                        $tool->getId(),
-                        $course->getId()
-                    );
-                    $lineItemResource->createLineItem(
-                        ['label' => $tool->getName(), 'scoreMaximum' => 100]
-                    );
-
-                    Display::addFlash(
-                        Display::return_message($plugin->get_lang('GradebookEvaluationCreated'), 'success')
-                    );
-                }
-            }
-
-            if (!$tool->isActiveDeepLinking()) {
-                $plugin->addCourseTool($course, $tool);
-            }
 
             Display::addFlash(
                 Display::return_message($plugin->get_lang('ToolAdded'), 'success')
@@ -187,46 +106,10 @@ switch ($action) {
                 ->setName($formValues['name'])
                 ->setDescription(
                     empty($formValues['description']) ? null : $formValues['description']
-                )
-                ->setActiveDeepLinking(
-                    !empty($formValues['deep_linking'])
-                )
-                ->setCustomParams(
-                    empty($formValues['custom_params']) ? null : $formValues['custom_params']
-		        )
-                ->setDocumenTarget($formValues['document_target'])
-                ->setPrivacy(
-                    !empty($formValues['share_name']),
-                    !empty($formValues['share_email']),
-                    !empty($formValues['share_picture'])
                 );
 
-            if (!empty($formValues['replacement_user_id'])) {
-                $tool->setReplacementForUserId($formValues['replacement_user_id']);
-            }
-
-            if (null === $tool->getParent()) {
-                if ($tool->getVersion() === Smowl::V_1P3) {
-                    $tool
-                        ->setLaunchUrl($formValues['launch_url'])
-                        ->setLoginUrl($formValues['login_url'])
-                        ->setRedirectUrl($formValues['redirect_url'])
-                        ->setAdvantageServices(
-                            [
-                                'ags' => isset($formValues['1p3_ags'])
-                                    ? $formValues['1p3_ags']
-                                    : SmowlAssignmentGradesService::AGS_NONE,
-                                'nrps' => $formValues['1p3_nrps'],
-                            ]
-                        )
-                        ->publicKey = $formValues['public_key'];
-                } elseif ($tool->getVersion() === Smowl::V_1P1) {
-                    $tool
-                        ->setLaunchUrl($formValues['launch_url'])
-                        ->setConsumerKey($formValues['consumer_key'])
-                        ->setSharedSecret($formValues['shared_secret']);
-                }
-            }
+            $tool
+            ->setLaunchUrl($formValues['launch_url']);
 
             $em->persist($tool);
             $em->flush();
