@@ -9,6 +9,9 @@ require_once __DIR__.'/../../main/inc/global.inc.php';
 api_protect_course_script();
 api_protect_teacher_script();
 
+$courseInfo = api_get_course_info();
+$sessionId = api_get_session_id();
+
 $plugin = SmowlPlugin::create();
 $em = Database::getManager();
 $toolsRepo = $em->getRepository('ChamiloPluginBundle:Smowl\SmowlTool');
@@ -29,6 +32,27 @@ if ($baseTool && !$baseTool->isGlobal()) {
 
     header('Location: '.api_get_self().'?'.api_get_cidreq());
     exit;
+}
+
+$exerciseList = $plugin->getCourseExercises($courseInfo, $sessionId);
+
+$my_exercise_list = [];
+$my_exercise_list['0'] = get_lang('AllExercises');
+$my_exercise_list['-1'] = get_lang('OrphanQuestions');
+$titleSavedAsHtml = api_get_configuration_value('save_titles_as_html');
+if (is_array($exercise_list)) {
+    foreach ($exercise_list as $row) {
+        $my_exercise_list[$row['iid']] = '';
+        if ($row['iid'] == $fromExercise && $selected_course == api_get_course_int_id()) {
+            $my_exercise_list[$row['iid']] = ">&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+
+        $exerciseTitle = $row['title'];
+        if ($titleSavedAsHtml) {
+            $exerciseTitle = strip_tags(api_html_entity_decode(trim($exerciseTitle)));
+        }
+        $my_exercise_list[$row['iid']] .= $exerciseTitle;
+    }
 }
 
 $categories = Category::load(null, null, $course->getCode());
@@ -66,6 +90,8 @@ switch ($action) {
 
             $em->persist($tool);
             $em->flush();
+
+            $plugin->addCourseTool($course, $tool);
 
             Display::addFlash(
                 Display::return_message($plugin->get_lang('ToolAdded'), 'success')
@@ -108,8 +134,11 @@ switch ($action) {
                     empty($formValues['description']) ? null : $formValues['description']
                 );
 
-            $tool
-            ->setLaunchUrl($formValues['launch_url']);
+
+            if (null === $tool->getParent()) {
+                $tool
+                ->setLaunchUrl($formValues['launch_url']);
+            }
 
             $em->persist($tool);
             $em->flush();
@@ -140,18 +169,6 @@ $template->assign('form', $form->returnForm());
 
 $content = $template->fetch('smowl/view/add.tpl');
 
-$actions = Display::url(
-    Display::return_icon('add.png', $plugin->get_lang('AddExternalTool'), [], ICON_SIZE_MEDIUM),
-    api_get_self().'?'.api_get_cidreq()
-);
 
-if (!empty($categories)) {
-    $actions .= Display::url(
-        Display::return_icon('gradebook.png', get_lang('MakeQualifiable'), [], ICON_SIZE_MEDIUM),
-        './gradebook/add_eval.php?selectcat='.$categories[0]->get_id().'&'.api_get_cidreq()
-    );
-}
-
-$template->assign('actions', Display::toolbarAction('lti_toolbar', [$actions]));
 $template->assign('content', $content);
 $template->display_one_col_template();

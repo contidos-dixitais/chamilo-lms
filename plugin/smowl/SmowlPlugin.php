@@ -677,6 +677,15 @@ class SmowlPlugin extends Plugin
             ->execute(['c_id' => (int) $courseId]);
     }
 
+    public function getCourseExercises($courseInfo, $sessionId) {
+        $exerciseList = ExerciseLib::get_all_exercises_for_course_id(
+            $courseInfo,
+            $sessionId,
+            $courseInfo['real_id'],
+            false
+        );
+    }
+
     /**
      * Generate a key pair and key id for the platform.
      *

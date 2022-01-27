@@ -59,6 +59,34 @@ class FrmAdd extends FormValidator
             $this->addUrl('launch_url', $plugin->get_lang('LaunchUrl'), true);
         }
 
+        $courseInfo = api_get_course_info();
+        $sessionId = api_get_session_id();
+
+        $exerciseList = $plugin->getCourseExercises($courseInfo, $sessionId);
+
+        if(!empty($exerciseList)) {
+            $my_exercise_list = [];
+            $titleSavedAsHtml = api_get_configuration_value('save_titles_as_html');
+            if (is_array($exerciseList)) {
+                foreach ($exerciseList as $row) {
+                    $my_exercise_list[$row['iid']] = '';
+            
+                    $exerciseTitle = $row['title'];
+                    if ($titleSavedAsHtml) {
+                        $exerciseTitle = strip_tags(api_html_entity_decode(trim($exerciseTitle)));
+                    }
+                    $my_exercise_list[$row['iid']] .= $exerciseTitle;
+                }
+            }
+            
+            $this->addSelect(
+                'exerciseId',
+                get_lang('Exercise'),
+                $my_exercise_list,
+                []
+            );
+        }
+
         $this->addButtonCreate($plugin->get_lang('AddExternalTool'));
         $this->applyFilter('__ALL__', 'trim');
     }
