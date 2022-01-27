@@ -684,6 +684,8 @@ class SmowlPlugin extends Plugin
             $courseInfo['real_id'],
             false
         );
+
+        return $exerciseList;
     }
 
     /**
