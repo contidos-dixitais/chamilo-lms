@@ -36,7 +36,7 @@
                 <p class="text-center">
                     {%  if user_registered %}
                         <a class="btn btn-default btn-sm"
-                        href="{{ exam_url }}">Acceder al examen</a>
+                        href="{{ exam_url }}" target="_blank">Acceder al examen</a>
                     {%  else %}
                         <span class="btn btn-sm">Para acceder al examen completa el proceso de registro</span>
                     {%  endif %}
