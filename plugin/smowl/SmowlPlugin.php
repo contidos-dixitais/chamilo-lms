@@ -688,6 +688,43 @@ class SmowlPlugin extends Plugin
         return $exerciseList;
     }
 
+    public function checkUserRegistration($entity, $userId) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://smowltech.net/WS_SMOWL/WS_SMOWL.php?wsdl',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>'<soapenv:Envelope
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:urn="urn:WS_SMOWL">
+            <soapenv:Header/>
+            <soapenv:Body>
+                <urn:ConfirmRegistration>
+                    <entity>'.$entity.'</entity>
+                    <idUser>'.$userId.'</idUser>
+                </urn:ConfirmRegistration>
+            </soapenv:Body>
+        </soapenv:Envelope>',
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: text/plain'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+
+        $status = str_contains($response , '<ack xsi:type="xsd:int">0</ack>');
+
+        return $status;
+    }
+
     /**
      * Generate a key pair and key id for the platform.
      *

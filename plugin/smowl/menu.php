@@ -29,6 +29,16 @@ $params = [
     'origin' => isset($_GET['origin']) ? $_GET['origin'] : 0,
 ];
 
+$plugin = SmowlPlugin::create();
+
+/** @var Platform $platform */
+$platform = Database::getManager()
+    ->getRepository('ChamiloPluginBundle:Smowl\Platform')
+    ->findOneBy([]);
+$entityName = $platform->getEntityName();
+
+$userRegistered = $plugin->checkUserRegistration($entityName, api_get_user_id());
+
 $startUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/start.php?'.http_build_query($params);
 $registerUserUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/register_user.php?'.http_build_query($params);
 $userReportUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/user_report.php?'.http_build_query($params);
@@ -39,6 +49,7 @@ $pageTitle = Security::remove_XSS($tool->getName());
 $template = new Template($pageTitle);
 $template->assign('tool', $tool);
 
+$template->assign('user_registered', $userRegistered);
 $template->assign('exam_url', $startUrl);
 $template->assign('register_user_url', $registerUserUrl);
 $template->assign('user_reports_url', $userReportUrl);
