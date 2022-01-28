@@ -54,7 +54,6 @@ try {
         $slctCourses,
         ['url' => api_get_path(WEB_AJAX_PATH).'course.ajax.php?a=search_course', 'multiple' => true]
     );
-    $form->addCheckBox('all_courses', '', $plugin->get_lang('AddInAllCourses'));
     $form->addCheckBox('tool_visible', get_lang('SetVisible'), get_lang('ToolIsNowVisible'));
     $form->addButtonExport(get_lang('Save'));
 
@@ -63,11 +62,6 @@ try {
         $formValues = $form->exportValues();
         $formValues['courses'] = empty($formValues['courses']) ? [] : $formValues['courses'];
         $formValues['tool_visible'] = !empty($formValues['tool_visible']);
-
-        if (!empty($formValues['all_courses'])) {
-            $courseList  = Database::select('id', Database::get_main_table(TABLE_MAIN_COURSE));
-            $formValues['courses'] = array_keys($courseList);
-        }
 
         $courseIdsToDelete = array_diff($selectedCoursesIds, $formValues['courses']);
         $newSelectedCourseIds = array_diff($formValues['courses'], $selectedCoursesIds);
