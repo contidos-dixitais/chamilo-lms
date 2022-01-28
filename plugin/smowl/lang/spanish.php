@@ -5,7 +5,7 @@ $strings['plugin_comment'] = 'Smowl';
 
 $strings['enabled'] = 'Activado';
 
-$strings['SmowlDescription'] = '<p>Learning Tools Interoperability® (LTI®) es una especificación desarrollada por el IMS Global Learning Consortium. El concepto principal de LTI es establecer una manera estándar de integrar aplicaciones de aprendizaje inteligentes (usualmente alojadas en servidores remotos y proveeidos a través de servicios de terceros) en plataformas como los LMS, portales, repositorios de objetos de aprendizaje, u otros ambientes educativos.</p>';
+$strings['SmowlDescription'] = '<p>SMOWL® es una plataforma de proctoring desarrollada por Smiley Owl Tech®.</p>';
 $strings['ManageToolButton'] = '<p>Para gestionar las herramientas, ir a la <a href="%s">lista de herramientas</a></p>';
 $strings['AddExternalTool'] = 'Añadir herramienta externa';
 $strings['ProviderName'] = 'Proveedor de la herramienta';

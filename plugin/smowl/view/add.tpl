@@ -22,10 +22,6 @@
                                             {{ 'webservices.png'|img(22, 'ConfigSettingsForTool'|get_plugin_lang('SmowlPlugin')) }}
                                         </a>
                                     {% endif %}
-
-                                    <a href="{{ _p.web_plugin }}smowl/configure.php?action=edit&id={{ tool.id }}&{{ _p.web_cid_query }}">
-                                        {{ 'edit.png'|img(22, 'Edit'|get_lang) }}
-                                    </a>
                                 </div>
                                 {{ tool.name|e }}
                             </li>

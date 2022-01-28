@@ -71,7 +71,7 @@ switch ($action) {
 
             $launchUrl = $formValues['launch_url'];
 
-            if(!empty($formValues['exerciseId'])) {
+            if(empty($formValues['launch_url'])) {
                 $exerciseId = $formValues['exerciseId'];
 
                 $exercise = new Exercise($courseInfo['real_id']);

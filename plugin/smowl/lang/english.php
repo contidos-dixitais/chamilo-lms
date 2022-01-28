@@ -7,7 +7,7 @@ $strings['enabled'] = 'Enabled';
 $strings['client_id'] = 'Client ID';
 $strings['client_id_help'] = 'Client ID to be used for tools by default. You can customize the client_id for each tool.';
 
-$strings['SmowlDescription'] = '<p>Learning Tools Interoperability® (LTI®) is a specification developed by IMS Global Learning Consortium. The principal concept of LTI is to establish a standard way of integrating rich learning applications (often remotely hosted and provided through third-party services) with platforms like learning management systems, portals, learning object repositories, or other educational environments.</p>';
+$strings['SmowlDescription'] = '<p>SMOWL® is a proctoring platform developed by Smiley Owl Tech®.</p>';
 $strings['ManageToolButton'] = '<p>To manage the tools go to <a href="%s">Tool list</a></p>';
 $strings['AddExternalTool'] = 'Add external tool';
 $strings['ProviderName'] = 'Provider name';
