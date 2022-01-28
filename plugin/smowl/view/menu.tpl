@@ -1,10 +1,11 @@
 {%  if tool.description %}
 <p class="lead">{{ tool.description|e|nl2br }}</p>
 {%  endif %}
+{{ 'SmowlIntroduction'|get_plugin_lang('SmowlPlugin') }}
 <div class="row">
     <div class="col-md-6">
         <div class="thumbnail">
-            {%  if user_registered %}
+            {%  if user_registered == 0 %}
                 <img src="resources/img/128/register.png">
             {%  else %}
                 <a href="{{ register_user_url }}">
@@ -13,11 +14,11 @@
             {%  endif %}
             <div class="caption">
                 <p class="text-center">
-                    {%  if user_registered %}
-                        <span class="btn btn-sm">Ya estás registrado en la prueba</span>
+                    {%  if user_registered == 0 or user_registered == -1 %}
+                        <span class="btn btn-sm">{{ user_registered_status_info }}</span>
                     {%  else %}
                         <a class="btn btn-default btn-sm"
-                        href="{{ register_user_url }}">Registrarse para acceder al examen</a>
+                        href="{{ register_user_url }}">{{ user_registered_status_info }}</a>
                     {%  endif %}
                 </p>
             </div>
@@ -25,7 +26,7 @@
     </div>
     <div class="col-md-6">
         <div class="thumbnail">
-            {%  if user_registered %}
+            {%  if user_registered == 0 %}
                 <a href="{{ exam_url }}">
                     <img src="resources/img/128/exam.png">
                 </a>
@@ -34,7 +35,7 @@
             {%  endif %}
             <div class="caption">
                 <p class="text-center">
-                    {%  if user_registered %}
+                    {%  if user_registered == 0 %}
                         <a class="btn btn-default btn-sm"
                         href="{{ exam_url }}" target="_blank">Acceder al examen</a>
                     {%  else %}

@@ -2,10 +2,9 @@
 /* For license terms, see /license.txt */
 $strings['plugin_title'] = 'Smowl';
 $strings['plugin_comment'] = 'Smowl';
-
 $strings['enabled'] = 'Activado';
-
 $strings['SmowlDescription'] = '<p>SMOWL® es una plataforma de proctoring desarrollada por Smiley Owl Tech®.</p>';
+$strings['SmowlIntroduction'] = '<p>Si es la primera vez que realiza una prueba proctorizada con SMOWL® deberá completar un registro donde se le realizará una captura de su rostro y de un documento de identificación oficial.</p><p>Si ya ha completado el proceso de registro y sigue sin poder acceder a la prueba es posible que este pendiente de una validación manual por la plataforma SMOWL®.</p>';
 $strings['ManageToolButton'] = '<p>Para gestionar las herramientas, ir a la <a href="%s">lista de herramientas</a></p>';
 $strings['AddExternalTool'] = 'Añadir herramienta externa';
 $strings['ProviderName'] = 'Proveedor de la herramienta';

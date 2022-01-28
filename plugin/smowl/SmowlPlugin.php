@@ -720,7 +720,18 @@ class SmowlPlugin extends Plugin
         
         curl_close($curl);
 
-        $status = str_contains($response , '<ack xsi:type="xsd:int">0</ack>');
+        if (str_contains($response , '<ack xsi:type="xsd:int">0</ack>')) {
+            $status = 0;
+        }
+        elseif(str_contains($response , '<ack xsi:type="xsd:int">-1</ack>')) {
+            $status = -1;
+        }
+        elseif(str_contains($response , '<ack xsi:type="xsd:int">-2</ack>')) {
+            $status = -2;
+        }
+        elseif(str_contains($response , '<ack xsi:type="xsd:int">-3</ack>')) {
+            $status = -3;
+        }
 
         return $status;
     }

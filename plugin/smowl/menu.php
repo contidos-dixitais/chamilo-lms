@@ -38,6 +38,18 @@ $platform = Database::getManager()
 $entityName = $platform->getEntityName();
 
 $userRegistered = $plugin->checkUserRegistration($entityName, api_get_user_id());
+$userRegisteredStatusInfo = "";
+
+if ($userRegistered == -1) {
+    $userRegisteredStatusInfo = "Registro para la prueba pendiente de aprobación";
+} elseif($userRegistered == -3) {
+    $userRegisteredStatusInfo = "Registrado pero debe aceptar los terminos";
+} elseif($userRegistered == 0) {
+    $userRegisteredStatusInfo = "Ya estás registrado en la prueba";    
+} else {
+    $userRegisteredStatusInfo = "Registrarse para acceder al examen";
+}
+
 
 $startUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/start.php?'.http_build_query($params);
 $registerUserUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/register_user.php?'.http_build_query($params);
@@ -50,6 +62,7 @@ $template = new Template($pageTitle);
 $template->assign('tool', $tool);
 
 $template->assign('user_registered', $userRegistered);
+$template->assign('user_registered_status_info', $userRegisteredStatusInfo);
 $template->assign('exam_url', $startUrl);
 $template->assign('register_user_url', $registerUserUrl);
 $template->assign('user_reports_url', $userReportUrl);

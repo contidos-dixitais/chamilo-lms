@@ -6,8 +6,8 @@ $strings['plugin_comment'] = 'Smowl';
 $strings['enabled'] = 'Enabled';
 $strings['client_id'] = 'Client ID';
 $strings['client_id_help'] = 'Client ID to be used for tools by default. You can customize the client_id for each tool.';
-
 $strings['SmowlDescription'] = '<p>SMOWL® is a proctoring platform developed by Smiley Owl Tech®.</p>';
+$strings['SmowlIntroduction'] = '<p>If this is your first time taking a proctorized test with SMOWL® you will need to complete a record that will be take a picture of your face and of an official identification document.</p>';
 $strings['ManageToolButton'] = '<p>To manage the tools go to <a href="%s">Tool list</a></p>';
 $strings['AddExternalTool'] = 'Add external tool';
 $strings['ProviderName'] = 'Provider name';
