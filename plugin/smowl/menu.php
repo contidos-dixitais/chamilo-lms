@@ -50,13 +50,17 @@ if ($userRegistered == -1) {
     $userRegisteredStatusInfo = "Registrarse para acceder al examen";
 }
 
-
 $startUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/start.php?'.http_build_query($params);
 $registerUserUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/register_user.php?'.http_build_query($params);
 $userReportUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/user_report.php?'.http_build_query($params);
 $activityReportUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/activity_report.php?'.http_build_query($params);
 
 $pageTitle = Security::remove_XSS($tool->getName());
+
+$interbreadcrumb[] = [
+    'url' => api_get_path(WEB_PLUGIN_PATH).'smowl/menu.php?'.http_build_query($params),
+    'name' => $tool->getName()
+];
 
 $template = new Template($pageTitle);
 $template->assign('tool', $tool);

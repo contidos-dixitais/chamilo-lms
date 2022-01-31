@@ -49,6 +49,25 @@ $pageTitle = Security::remove_XSS($tool->getName());
 
 $launchUrl = api_get_path(WEB_PLUGIN_PATH).'smowl/form.php?'.http_build_query(['id' => $tool->getId()]);
 
+$params = [
+    'id' => $tool->getId(),
+    'cidReq' => $_GET['cidReq'],
+    'id_session' => isset($_GET['id_session']) ? intval($_GET['id_session']) : 0,
+    'gidReq' => isset($_GET['gidReq']) ? intval($_GET['gidReq']) : 0,
+    'gradebook' => isset($_GET['gradebook']) ? intval($_GET['gradebook']) : 0,
+    'origin' => isset($_GET['origin']) ? $_GET['origin'] : 0,
+];
+
+$interbreadcrumb[] = [
+    'url' => api_get_path(WEB_PLUGIN_PATH).'smowl/menu.php?'.http_build_query($params),
+    'name' => $tool->getName()
+];
+
+$interbreadcrumb[] = [
+    'url' => api_get_path(WEB_PLUGIN_PATH).'smowl/user_report.php?'.http_build_query($params),
+    'name' => 'Informe de regitro de usuarios'
+];
+
 $template = new Template($pageTitle);
 $template->assign('tool', $tool);
 
