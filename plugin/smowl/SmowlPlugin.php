@@ -443,50 +443,6 @@ class SmowlPlugin extends Plugin
     }
 
     /**
-     * @param User $currentUser
-     * @param SmowlTool $tool
-     *
-     * @return string
-     */
-    public static function getRoleScopeMentor(User $currentUser, SmowlTool $tool)
-    {
-        $scope = self::getRoleScopeMentorAsArray($currentUser, $tool, true);
-
-        return implode(',', $scope);
-    }
-
-    /**
-     * Tool User IDs which the user DRH can access as a mentor.
-     *
-     * @param User       $user
-     * @param SmowlTool $tool
-     * @param bool       $generateIdForTool. Optional. Set TRUE for LTI 1.x.
-     *
-     * @return array
-     */
-    public static function getRoleScopeMentorAsArray(User $user, SmowlTool $tool, $generateIdForTool = false)
-    {
-        if (DRH !== $user->getStatus()) {
-            return [];
-        }
-
-        $followedUsers = UserManager::get_users_followed_by_drh($user->getId(), 0, true);
-        $scope = [];
-        /** @var array $userInfo */
-        foreach ($followedUsers as $userInfo) {
-            if ($generateIdForTool) {
-                $followedUser = api_get_user_entity($userInfo['user_id']);
-
-                $scope[] = self::getLaunchUserIdClaim($tool, $followedUser);
-            } else {
-                $scope[] = (string) $userInfo['user_id'];
-            }
-        }
-
-        return $scope;
-    }
-
-    /**
      * @param array      $contentItem
      * @param SmowlTool $baseSmowlTool
      * @param Course     $course
@@ -550,22 +506,6 @@ class SmowlPlugin extends Plugin
     }
 
     /**
-     * @return SmowlServiceResponse|null
-     */
-    public function processServiceRequest()
-    {
-        $xml = $this->getRequestXmlElement();
-
-        if (empty($xml)) {
-            return null;
-        }
-
-        $request = SmowlServiceRequestFactory::create($xml);
-
-        return $request->process();
-    }
-
-    /**
      * @param int    $toolId
      * @param Course $course
      *
@@ -580,46 +520,6 @@ class SmowlPlugin extends Plugin
         $tool = $toolRepo->findOneBy(['id' => $toolId, 'course' => $course]);
 
         return !empty($tool);
-    }
-
-    /**
-     * @param string $configUrl
-     *
-     * @return string
-     * @throws Exception
-     */
-    public function getLaunchUrlFromCartridge($configUrl)
-    {
-        $options = [
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_POST => false,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => false,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_SSL_VERIFYPEER => false,
-        ];
-
-        $ch = curl_init($configUrl);
-        curl_setopt_array($ch, $options);
-        $content = curl_exec($ch);
-        $errno = curl_errno($ch);
-        curl_close($ch);
-
-        if ($errno !== 0) {
-            throw new Exception($this->get_lang('NoAccessToUrl'));
-        }
-
-        $xml = new SimpleXMLElement($content);
-        $result = $xml->xpath('blti:launch_url');
-
-        if (empty($result)) {
-            throw new Exception($this->get_lang('LaunchUrlNotFound'));
-        }
-
-        $launchUrl = $result[0];
-
-        return (string) $launchUrl;
     }
 
     /**

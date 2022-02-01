@@ -38,22 +38,6 @@ try {
         .'<div class="row">'
         .'<div class="col-xs-5 text-right"><strong>'.$plugin->get_lang('DeploymentId').'</strong></div>'
         .'<div class="col-xs-7">'.($tool->getParent() ? $tool->getParent()->getId() : $tool->getId()).'</div>'
-        .'</div>'
-        .'<div class="row">'
-        .'<div class="col-xs-5 text-right"><strong>'.$plugin->get_lang('ClientId').'</strong></div>'
-        .'<div class="col-xs-7">'.$tool->getClientId().'</div>'
-        .'</div>'
-        .'<div class="row">'
-        .'<div class="col-xs-5 text-right"><strong>'.$plugin->get_lang('AuthUrl').'</strong></div>'
-        .'<div class="col-xs-7">'.$webPluginPath.'auth.php</div>'
-        .'</div>'
-        .'<div class="row">'
-        .'<div class="col-xs-5 text-right"><strong>'.$plugin->get_lang('TokenUrl').'</strong></div>'
-        .'<div class="col-xs-7">'.$webPluginPath.'token.php</div>'
-        .'</div>'
-        .'<div class="row">'
-        .'<div class="col-xs-5 text-right"><strong>'.$plugin->get_lang('KeySetUrl').'</strong></div>'
-        .'<div class="col-xs-7">'.$webPluginPath.'jwks.php</div>'
         .'</div>';
 
     $response->setContent($html);

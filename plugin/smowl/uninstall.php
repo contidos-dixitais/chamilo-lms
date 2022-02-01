@@ -2,7 +2,7 @@
 /* For license terms, see /license.txt */
 
 /**
- * Uninstall the MSI/LTI Plugin.
+ * Uninstall the Smowl Plugin.
  *
  * @package chamilo.plugin.smowl
  */

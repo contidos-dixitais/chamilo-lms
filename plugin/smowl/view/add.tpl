@@ -10,18 +10,6 @@
                         {% for tool in added_tools %}
                             <li class="list-group-item {{ type == tool.id ? 'active' : '' }}">
                                 <div class="pull-right">
-                                    {% if tool.isActiveDeepLinking %}
-                                        <a href="{{ _p.web_plugin }}smowl/start.php?id={{ tool.id }}&{{ _p.web_cid_query }}">
-                                            {{ 'settings.png'|img(22, 'Configure'|get_lang) }}
-                                        </a>
-                                    {% endif %}
-
-                                    {% if tool.version == 'lti1p3' %}
-                                        <a href="{{ _p.web_plugin }}smowl/tool_settings.php?{{ {'id': tool.id}|url_encode }}" class="ajax"
-                                           data-title="{{ 'ConfigSettingsForTool'|get_plugin_lang('SmowlPlugin') }}">
-                                            {{ 'webservices.png'|img(22, 'ConfigSettingsForTool'|get_plugin_lang('SmowlPlugin')) }}
-                                        </a>
-                                    {% endif %}
                                 </div>
                                 {{ tool.name|e }}
                             </li>
@@ -39,15 +27,9 @@
                         {% for tool in global_tools %}
                             <li class="list-group-item {{ type == tool.id ? 'active' : '' }}">
                                 <div class="pull-right">
-                                    {% if tool.isActiveDeepLinking %}
-                                        <a href="{{ _p.web_plugin }}smowl/start.php?id={{ tool.id }}&{{ _p.web_cid_query }}">
-                                            {{ 'settings.png'|img(22, 'Configure'|get_lang) }}
-                                        </a>
-                                    {% else %}
-                                        <a href="{{ _p.web_self }}?type={{ tool.id }}&{{ _p.web_cid_query }}">
-                                            {{ 'add.png'|img(22, 'Add'|get_lang) }}
-                                        </a>
-                                    {% endif %}
+                                    <a href="{{ _p.web_self }}?type={{ tool.id }}&{{ _p.web_cid_query }}">
+                                        {{ 'add.png'|img(22, 'Add'|get_lang) }}
+                                    </a>
                                 </div>
                                 {{ tool.name|e }}
                             </li>

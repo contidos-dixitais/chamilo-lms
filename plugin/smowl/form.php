@@ -42,14 +42,6 @@ $params['data'] = 'tool:'.$tool->getId();
 
 $params['user_id'] = $toolUserId;
 
-if (DRH === $user->getStatus()) {
-    $scopeMentor = SmowlPlugin::getRoleScopeMentor($user, $tool);
-
-    if (!empty($scopeMentor)) {
-        $params['role_scope_mentor'] = $scopeMentor;
-    }
-}
-
 $params['context_id'] = $course->getId();
 $params['context_type'] = 'CourseSection';
 $params['context_label'] = $course->getCode();
@@ -62,16 +54,6 @@ $params['tool_consumer_instance_name'] = api_get_setting('siteName');
 $params['tool_consumer_instance_url'] = api_get_path(WEB_PATH);
 $params['tool_consumer_instance_contact_email'] = api_get_setting('emailAdministrator');
 $params['oauth_callback'] = 'about:blank';
-
-$params += Smowl::substituteVariablesInCustomParams(
-    $params,
-    [],
-    $user,
-    $course,
-    $session,
-    $platformDomain,
-    $tool
-);
 
 $smowlPlugin->trimParams($params);
 

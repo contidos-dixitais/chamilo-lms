@@ -81,13 +81,6 @@ class SmowlTool
     private $children;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Chamilo\PluginBundle\Entity\Smowl\LineItem", mappedBy="tool")
-     */
-    private $lineItems;
-
-    /**
      * SmowlTool constructor.
      */
     public function __construct()
@@ -96,7 +89,6 @@ class SmowlTool
         $this->course = null;
         $this->gradebookEval = null;
         $this->children = new ArrayCollection();
-        $this->lineItems = new ArrayCollection();
     }
 
     /**
@@ -173,86 +165,6 @@ class SmowlTool
     public function isGlobal()
     {
         return $this->course === null;
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return null|string
-     */
-    public function encodeCustomParams(array $params)
-    {
-        if (empty($params)) {
-            return null;
-        }
-
-        $pairs = [];
-
-        foreach ($params as $key => $value) {
-            $pairs[] = "$key=$value";
-        }
-
-        return implode("\n", $pairs);
-    }
-
-    /**
-     * @return array
-     */
-    public function getCustomParamsAsArray()
-    {
-        $params = [];
-        $lines = array_filter($lines);
-
-        foreach ($lines as $line) {
-            list($key, $value) = explode('=', $line, 2);
-
-            $key = self::filterSpecialChars($key);
-            $value = self::filterSpaces($value);
-
-            $params[$key] = $value;
-        }
-
-        return $params;
-    }
-
-    /**
-     * Map the key from custom param.
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    private static function filterSpecialChars($key)
-    {
-        $newKey = '';
-        $key = strtolower($key);
-        $split = str_split($key);
-
-        foreach ($split as $char) {
-            if (
-                ($char >= 'a' && $char <= 'z') || ($char >= '0' && $char <= '9')
-            ) {
-                $newKey .= $char;
-
-                continue;
-            }
-
-            $newKey .= '_';
-        }
-
-        return $newKey;
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private static function filterSpaces($value)
-    {
-        $newValue = preg_replace('/\s+/', ' ', $value);
-
-        return trim($newValue);
     }
 
     /**
@@ -343,75 +255,6 @@ class SmowlTool
     public function setParent(SmowlTool $parent)
     {
         $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Add LineItem to lineItems.
-     *
-     * @param LineItem $lineItem
-     *
-     * @return $this
-     */
-    public function addLineItem(LineItem $lineItem)
-    {
-        $lineItem->setTool($this);
-
-        $this->lineItems[] = $lineItem;
-
-        return $this;
-    }
-
-    /**
-     * @param int    $resourceLinkId
-     * @param int    $resourceId
-     * @param string $tag
-     * @param int    $limit
-     * @param int    $page
-     *
-     * @return ArrayCollection
-     */
-    public function getLineItems($resourceLinkId = 0, $resourceId = 0, $tag = '', $limit = 0, $page = 1)
-    {
-        $criteria = Criteria::create();
-
-        if ($resourceLinkId) {
-            $criteria->andWhere(Criteria::expr()->eq('tool', $resourceId));
-        }
-
-        if ($resourceId) {
-            $criteria->andWhere(Criteria::expr()->eq('tool', $resourceId));
-        }
-
-        if (!empty($tag)) {
-            $criteria->andWhere(Criteria::expr()->eq('tag', $tag));
-        }
-
-        $limit = (int) $limit;
-        $page = (int) $page;
-
-        if ($limit > 0) {
-            $criteria->setMaxResults($limit);
-
-            if ($page > 0) {
-                $criteria->setFirstResult($page * $limit);
-            }
-        }
-
-        return $this->lineItems->matching($criteria);
-    }
-
-    /**
-     * Set lineItems.
-     *
-     * @param ArrayCollection $lineItems
-     *
-     * @return $this
-     */
-    public function setLineItems(ArrayCollection $lineItems)
-    {
-        $this->lineItems = $lineItems;
 
         return $this;
     }
