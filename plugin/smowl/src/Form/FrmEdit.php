@@ -1,7 +1,7 @@
 <?php
 /* For licensing terms, see /license.txt */
 
-namespace Chamilo\PluginBundle\Form;
+namespace Chamilo\PluginBundle\Smowl\Form;
 
 use Category;
 use Chamilo\PluginBundle\Entity\Smowl\SmowlTool;

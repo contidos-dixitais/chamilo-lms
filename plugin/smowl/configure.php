@@ -134,7 +134,7 @@ switch ($action) {
             break;
         }
 
-        $form = new \Chamilo\PluginBundle\Form\FrmEdit('smowl_edit_tool', [], $tool);
+        $form = new \Chamilo\PluginBundle\Smowl\Form\FrmEdit('smowl_edit_tool', [], $tool);
         $form->build(false);
 
         if ($form->validate()) {

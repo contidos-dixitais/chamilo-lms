@@ -2,7 +2,7 @@
 /* For license terms, see /license.txt */
 
 use Chamilo\PluginBundle\Entity\Smowl\SmowlTool;
-use Chamilo\PluginBundle\Form\FrmEdit;
+use Chamilo\PluginBundle\Smowl\Form\FrmEdit;
 
 $cidReset = true;
 
@@ -13,6 +13,14 @@ api_protect_admin_script();
 if (!isset($_REQUEST['id'])) {
     api_not_allowed(true);
 }
+
+$params = [
+    'cidReq' => $_GET['cidReq'],
+    'id_session' => isset($_GET['id_session']) ? intval($_GET['id_session']) : 0,
+    'gidReq' => isset($_GET['gidReq']) ? intval($_GET['gidReq']) : 0,
+    'gradebook' => isset($_GET['gradebook']) ? intval($_GET['gradebook']) : 0,
+    'origin' => isset($_GET['origin']) ? $_GET['origin'] : 0,
+];
 
 $toolId = intval($_REQUEST['id']);
 
@@ -78,7 +86,12 @@ if ($form->validate()) {
         Display::return_message($plugin->get_lang('ToolEdited'), 'success')
     );
 
-    header('Location: '.api_get_path(WEB_PLUGIN_PATH).'smowl/admin.php');
+    if (empty($_GET['cidReq'])) {    
+        header('Location: '.api_get_path(WEB_PLUGIN_PATH).'smowl/admin.php');
+    } else {
+        header('Location: '.api_get_path(WEB_PLUGIN_PATH).'smowl/configure.php?'.http_build_query($params));
+    }
+
     exit;
 } else {
     $form->setDefaultValues();

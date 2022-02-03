@@ -10,6 +10,9 @@
                         {% for tool in added_tools %}
                             <li class="list-group-item {{ type == tool.id ? 'active' : '' }}">
                                 <div class="pull-right">
+                                    <a href="{{ _p.web_plugin }}smowl/delete.php?id={{ tool.id }}&{{ _p.web_cid_query }}">
+                                        {{ 'delete.png'|img(22, 'Delete'|get_lang) }}
+                                    </a>
                                 </div>
                                 {{ tool.name|e }}
                             </li>
@@ -30,6 +33,9 @@
                                     <a href="{{ _p.web_self }}?type={{ tool.id }}&{{ _p.web_cid_query }}">
                                         {{ 'add.png'|img(22, 'Add'|get_lang) }}
                                     </a>
+                                    <a href="{{ _p.web_plugin }}ims_lti/delete.php?id={{ tool.id }}&{{ _p.web_cid_query }}">
+                                        {{ 'settings.png'|img(22, 'Configure'|get_lang) }}
+                                    </a>                                    
                                 </div>
                                 {{ tool.name|e }}
                             </li>
