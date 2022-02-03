@@ -6,7 +6,7 @@
     <input type="hidden" name="Entity" value="{{ entity_name }}" />
     <input type="hidden" name="swlLicenseKey" value="{{ license_key }}" />
     <input type="hidden" name="Modality" value="quiz" />
-    <input type="hidden" name="idCourse" value="{{ courseCode }}" />
+    <input type="hidden" name="idCourse" value="{{ course_code }}" />
     <input type="hidden" name="anombres" value="{{ users }}" />
     <input type="hidden" name="lang" value="{{ lang }}" />
     <input type="hidden" name="course_MoodleName" value="{{ tool.name }}" />

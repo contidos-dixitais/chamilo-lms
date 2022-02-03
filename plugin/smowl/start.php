@@ -47,7 +47,7 @@ $template->assign('user_id', api_get_user_id());
 $template->assign('lang', api_get_language_isocode());
 $template->assign('course_link', urlencode(api_get_course_url($courseCode, api_get_session_id())));
 
-$content = $template->fetch('smowl/view/start.tpl');
+$content = $template->fetch('smowl/view/start_smowl.tpl');
 
 $template->assign('header', $pageTitle);
 $template->assign('content', $content);
