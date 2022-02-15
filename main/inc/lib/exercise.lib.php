@@ -6807,4 +6807,19 @@ EOT;
 
         error_log("Exercise ping received: exe_id = $exeId. _user not found in session.");
     }
+
+    public static function isQuestionOnOtherQuizs(int $questionId)
+    {
+        $em = Database::getManager();
+
+        $countAll = $em
+            ->createQuery('SELECT COUNT(qq)
+                FROM ChamiloCourseBundle:CQuizRelQuestion qrq
+                WHERE qrq.iid = :id'
+            )
+            ->setParameter('id', $questionId)
+            ->getSingleScalarResult();
+
+        return $countAll;
+    }
 }
