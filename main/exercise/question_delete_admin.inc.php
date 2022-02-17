@@ -22,6 +22,12 @@ if ($deleteQuestion) {
     $delete = false;
     $results = ExerciseLib::isQuestionOnOtherQuizs($questionId);
     if ($results) {
+        $masterExerciseId = ExerciseLib::getMasterQuizForQuestion($questionId);
+        if ($masterExerciseId == $exerciseId) {
+            $delete = true;
+        } else {
+
+        }
     } else {
         $delete = true;
     }

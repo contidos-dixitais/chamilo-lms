@@ -6822,4 +6822,27 @@ EOT;
 
         return $countAll;
     }
+
+    public static function getMasterQuizForQuestion($questionId)
+    {
+        $row = \Database::select(
+            '*',
+            \Database::get_course_table(TABLE_QUIZ_TEST_QUESTION),
+            [
+                'where' => [
+                    'question_id = ?' => [
+                        $questionId,
+                    ],
+                ],
+                'order' => 'iid ASC',
+            ],
+            'first'
+        );
+
+        if (is_array($row) && isset($row['iid'])) {
+            return $row['iid'];
+        } else {
+            return false;
+        }
+    }
 }
