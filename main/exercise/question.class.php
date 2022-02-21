@@ -2725,13 +2725,12 @@ abstract class Question
             'first'
         );
 
-        if (is_array($row) && isset($row['iid'])) {
-            return $row['iid'];
+        if (is_array($row) && isset($row['exercice_id'])) {
+            return $row['exercice_id'];
         } else {
             return false;
         }
     }
-
 
     /**
      * Resizes a picture || Warning!: can only be called after uploadPicture,
