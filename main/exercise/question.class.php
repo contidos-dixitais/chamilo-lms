@@ -2692,7 +2692,7 @@ abstract class Question
             $table,
             [
                 'where' => [
-                    'iid = ? ' => [
+                    'question_id = ? ' => [
                         $questionId,
                     ],
                 ],
