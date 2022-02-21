@@ -2683,6 +2683,56 @@ abstract class Question
         return (int) $result['c'];
     }
 
+
+    public static function isQuestionOnOtherQuizs(int $questionId)
+    {
+        $table = Database::get_course_table(TABLE_QUIZ_TEST_QUESTION);
+        $result = Database::select(
+            'count(*) as count',
+            $table,
+            [
+                'where' => [
+                    'iid = ? ' => [
+                        $questionId,
+                    ],
+                ],
+            ],
+            'first'
+        );
+
+        if ($result && isset($result['count'])) {
+            return $result['count'];
+        }
+
+        return 0;        
+    }
+
+    public static function getMasterQuizForQuestion($questionId)
+    {
+        $table = Database::get_course_table(TABLE_QUIZ_TEST_QUESTION);
+        
+        $row = Database::select(
+            '*',
+            $table,
+            [
+                'where' => [
+                    'question_id = ?' => [
+                        $questionId,
+                    ],
+                ],
+                'order' => 'iid ASC',
+            ],
+            'first'
+        );
+
+        if (is_array($row) && isset($row['iid'])) {
+            return $row['iid'];
+        } else {
+            return false;
+        }
+    }
+
+
     /**
      * Resizes a picture || Warning!: can only be called after uploadPicture,
      * or if picture is already available in object.

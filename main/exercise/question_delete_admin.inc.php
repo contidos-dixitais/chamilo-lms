@@ -317,9 +317,9 @@ if (!$inATest) {
 
                     $delete = false;
                     $questionInOtherQuizs = true;
-                    $results = ExerciseLib::isQuestionOnOtherQuizs($questionId);
-                    if ($results) {
-                        $masterExerciseId = ExerciseLib::getMasterQuizForQuestion($questionId);
+                    $results = Question::isQuestionOnOtherQuizs($id);
+                    if ($results && $results > 1) {
+                        $masterExerciseId = Question::getMasterQuizForQuestion($id);
                         if ($masterExerciseId == $exerciseId) {
                             $delete = true;
                             $questionInOtherQuizs = true;
