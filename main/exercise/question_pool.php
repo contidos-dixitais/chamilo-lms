@@ -1105,6 +1105,8 @@ $actionLabel = get_lang('ReUseACopyInCurrentTest');
 $actions = ['clone' => get_lang('ReUseACopyInCurrentTest')];
 if ($selected_course == api_get_course_int_id()) {
     $actions = ['reuse' => get_lang('ReuseQuestion')];
+} elseif (true === api_get_configuration_value('quiz_question_allow_inter_course_linking')) {
+    $actions = ['reuse' => get_lang('ReuseQuestion')];
 }
 
 foreach ($actions as $action => &$label) {
