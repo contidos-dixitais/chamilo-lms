@@ -81,10 +81,10 @@ $addImageUrl = api_get_path(WEB_CODE_PATH).'inc/lib/elfinder/filemanager.php?add
 
         $(".opener").click(function () {
             var targetUrl = $(this).attr("href");
-            var otherQuizs = $(this).data("otherQuizs");
+            var otherQuizs = $(this).data("otherquizs");
 
             if (otherQuizs) {
-                $("#dialog-confirm").attr("title", "<?php echo get_lang('QuestionInOtherExercises'); ?>");
+                $("#dialog-confirm p").text("<?php echo get_lang('QuestionInOtherExercises'); ?>")
             }
 
             $("#dialog-confirm").dialog({
@@ -345,7 +345,7 @@ if (!$inATest) {
                             [
                                 'id' => "delete_$id",
                                 'class' => 'opener btn btn-default btn-sm',
-                                'otherQuizs' => $questionInOtherQuizs,
+                                'data-otherquizs' => $questionInOtherQuizs,
                             ]
                         );
                     }
