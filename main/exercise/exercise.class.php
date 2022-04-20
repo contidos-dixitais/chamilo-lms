@@ -1922,7 +1922,7 @@ class Exercise
      *
      * @author Olivier Brouckaert
      */
-    public function delete()
+    public function delete($deleteQuestions = false)
     {
         $limitTeacherAccess = api_get_configuration_value('limit_exercise_teacher_access');
 
@@ -1976,6 +1976,17 @@ class Exercise
 
         if ($linkInfo !== false) {
             GradebookUtils::remove_resource_from_course_gradebook($linkInfo['id']);
+        }
+
+        if ($deleteQuestions){
+            $questionList = $this->getQuestionOrderedList(true);
+
+            foreach ($questionList as $questionId) {
+                $objQuestionTmp = Question::read($questionId);
+                $objQuestionTmp->delete($this->course);
+
+                $this->removeFromList($questionId);
+            }
         }
 
         return true;
