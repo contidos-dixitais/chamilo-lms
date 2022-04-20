@@ -1982,10 +1982,13 @@ class Exercise
             $questionList = $this->getQuestionOrderedList(true);
 
             foreach ($questionList as $questionId) {
-                $objQuestionTmp = Question::read($questionId);
-                $objQuestionTmp->delete($this->course);
+                $masterExerciseId = Question::getMasterQuizForQuestion($questionId);
+                if ($masterExerciseId == $this->iid) {
+                    $objQuestionTmp = Question::read($questionId);
+                    $objQuestionTmp->delete($this->course);
 
-                $this->removeFromList($questionId);
+                    $this->removeFromList($questionId);
+                }
             }
         }
 
