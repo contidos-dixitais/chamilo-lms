@@ -2525,20 +2525,25 @@ class Category implements GradebookItem
 
     /**
      * Return HTML code with links to download and view certificate.
-     *
-     * @return string
      */
-    public static function getDownloadCertificateBlock(array $certificate)
+    public static function getDownloadCertificateBlock(array $certificate): string
     {
         if (!isset($certificate['pdf_url'])) {
             return '';
         }
 
-        $downloadLink = Display::toolbarButton(
-            get_lang('DownloadCertificatePdf'),
-            $certificate['pdf_url'],
-            'file-pdf-o'
-        );
+        $hideExportLink = api_get_setting('hide_certificate_export_link');
+        $hideExportLinkStudent = api_get_setting('hide_certificate_export_link_students');
+        if ($hideExportLink === 'true' || (api_is_student() && $hideExportLinkStudent === 'true')) {
+            $downloadLink = '';
+        } else {
+            $downloadLink = Display::toolbarButton(
+                get_lang('DownloadCertificatePdf'),
+                $certificate['pdf_url'],
+                'file-pdf-o'
+            );
+        }
+
         $viewLink = $certificate['certificate_link'];
 
         return "
