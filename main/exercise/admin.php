@@ -478,7 +478,8 @@ if (isset($_GET['hotspotadmin'])) {
 
 if (!$newQuestion && !$modifyQuestion && !$editQuestion && !isset($_GET['hotspotadmin'])) {
     // question list management
-    require 'question_list_admin.inc.php';
+    //require 'question_list_admin.inc.php';
+    require 'question_delete_admin.inc.php';
 }
 
 // if we are in question authoring, display warning to user is feedback not shown at the end of the test -ref #6619
