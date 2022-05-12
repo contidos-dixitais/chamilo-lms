@@ -478,7 +478,6 @@ if (isset($_GET['hotspotadmin'])) {
 
 if (!$newQuestion && !$modifyQuestion && !$editQuestion && !isset($_GET['hotspotadmin'])) {
     // question list management
-    //require 'question_list_admin.inc.php';
     require 'question_delete_admin.inc.php';
 }
 

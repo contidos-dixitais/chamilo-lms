@@ -23,7 +23,7 @@ if ($deleteQuestion) {
     // if the question exists
     if ($objQuestionTmp = Question::read($deleteQuestion)) {
         if ($allowInterCourseLinking === true) {
-            $masterExerciseId = Question::getMasterQuizForQuestion($id);
+            $masterExerciseId = Question::getMasterQuizForQuestion($objQuestionTmp->iid);
 
             if ($masterExerciseId != $exerciseId) {
                 $objQuestionTmp->delete($exerciseId);

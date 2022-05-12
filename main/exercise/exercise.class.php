@@ -1978,15 +1978,14 @@ class Exercise
             GradebookUtils::remove_resource_from_course_gradebook($linkInfo['id']);
         }
 
-        if ($deleteQuestions){
+        if ($deleteQuestions) {
             $questionList = $this->getQuestionOrderedList(true);
 
             foreach ($questionList as $questionId) {
                 $masterExerciseId = Question::getMasterQuizForQuestion($questionId);
                 if ($masterExerciseId == $this->iid) {
                     $objQuestionTmp = Question::read($questionId);
-                    $objQuestionTmp->delete($this->course);
-
+                    $objQuestionTmp->delete();
                     $this->removeFromList($questionId);
                 }
             }
