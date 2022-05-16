@@ -377,7 +377,7 @@ if ($is_allowedToEdit) {
                     case 'delete':
                         // deletes an exercise
                         if ($allowDelete) {
-                            $result = $objExerciseTmp->delete();
+                            $result = $objExerciseTmp->delete(true);
                             if ($result) {
                                 Display::addFlash(Display::return_message(get_lang('ExerciseDeleted'), 'confirmation'));
                             }
