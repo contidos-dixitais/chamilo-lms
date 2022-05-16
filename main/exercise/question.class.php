@@ -1438,7 +1438,7 @@ abstract class Question
             //update the question_order of each question to avoid inconsistencies
             $sql = "SELECT exercice_id, question_order
                     FROM $TBL_EXERCISE_QUESTION
-                    WHERE c_id = $courseId AND question_id = $id";
+                    WHERE question_id = $id";
 
             $res = Database::query($sql);
             if (Database::num_rows($res) > 0) {
@@ -1447,7 +1447,6 @@ abstract class Question
                         $sql = "UPDATE $TBL_EXERCISE_QUESTION
                                 SET question_order = question_order-1
                                 WHERE
-                                    c_id = $courseId AND
                                     exercice_id = ".intval($row['exercice_id'])." AND
                                     question_order > ".$row['question_order'];
                         Database::query($sql);
@@ -1456,7 +1455,7 @@ abstract class Question
             }
 
             $sql = "DELETE FROM $TBL_EXERCISE_QUESTION
-                    WHERE c_id = $courseId AND question_id = $id";
+                    WHERE question_id = $id";
             Database::query($sql);
 
             $sql = "DELETE FROM $TBL_QUESTIONS
@@ -1470,7 +1469,6 @@ abstract class Question
             // remove the category of this question in the question_rel_category table
             $sql = "DELETE FROM $TBL_QUIZ_QUESTION_REL_CATEGORY
                     WHERE
-                        c_id = $courseId AND
                         question_id = $id";
             Database::query($sql);
 
