@@ -452,7 +452,7 @@ class Notification extends Model
             $content = $newMessageText.'<br /><hr><br />'.$content;
         }
 
-        if (api_get_setting('notifications_message_hide_footer') !== 'true') {
+        if (api_get_configuration_value('notifications_message_hide_footer') !== true) {
 
             // See message with link text
             if (!empty($linkToNewMessage) && api_get_setting('allow_message_tool') == 'true') {
