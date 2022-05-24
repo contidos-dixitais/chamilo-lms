@@ -610,16 +610,16 @@ class SmowlPlugin extends Plugin
         
         curl_close($curl);
 
-        if (str_contains($response , '"ack": 0')) {
+        if (str_contains($response , '"ack":0')) {
             $status = 0;
         }
-        elseif(str_contains($response , '"ack": -1')) {
+        elseif(str_contains($response , '"ack":-1')) {
             $status = -1;
         }
-        elseif(str_contains($response , '"ack": -2')) {
+        elseif(str_contains($response , '"ack":-2')) {
             $status = -2;
         }
-        elseif(str_contains($response , '"ack": -3')) {
+        elseif(str_contains($response , '"ack":-3')) {
             $status = -3;
         }
 
