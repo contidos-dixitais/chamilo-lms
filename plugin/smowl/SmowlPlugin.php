@@ -592,7 +592,7 @@ class SmowlPlugin extends Plugin
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://smowltech.net/WS_SMOWL/WS_SMOWL.php?wsdl',
+          CURLOPT_URL => 'https://results-api.smowltech.net/index.php/Restv1/ConfirmRegistration',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -600,19 +600,9 @@ class SmowlPlugin extends Plugin
           CURLOPT_FOLLOWLOCATION => true,
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
           CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>'<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:urn="urn:WS_SMOWL">
-            <soapenv:Header/>
-            <soapenv:Body>
-                <urn:ConfirmRegistration>
-                    <entity>'.$entity.'</entity>
-                    <idUser>'.$userId.'</idUser>
-                </urn:ConfirmRegistration>
-            </soapenv:Body>
-        </soapenv:Envelope>',
+          CURLOPT_POSTFIELDS => 'entity='.$entity.'&idUser='.$userId,
           CURLOPT_HTTPHEADER => array(
-            'Content-Type: text/plain'
+            'Content-Type: application/x-www-form-urlencoded'
           ),
         ));
         
@@ -620,16 +610,16 @@ class SmowlPlugin extends Plugin
         
         curl_close($curl);
 
-        if (str_contains($response , '<ack xsi:type="xsd:int">0</ack>')) {
+        if (str_contains($response , '"ack": 0')) {
             $status = 0;
         }
-        elseif(str_contains($response , '<ack xsi:type="xsd:int">-1</ack>')) {
+        elseif(str_contains($response , '"ack": -1')) {
             $status = -1;
         }
-        elseif(str_contains($response , '<ack xsi:type="xsd:int">-2</ack>')) {
+        elseif(str_contains($response , '"ack": -2')) {
             $status = -2;
         }
-        elseif(str_contains($response , '<ack xsi:type="xsd:int">-3</ack>')) {
+        elseif(str_contains($response , '"ack": -3')) {
             $status = -3;
         }
 
