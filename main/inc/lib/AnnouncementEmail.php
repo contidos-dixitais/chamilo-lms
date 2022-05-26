@@ -258,7 +258,7 @@ class AnnouncementEmail
 
         if (api_get_configuration_value('announcements_hide_footer_link') !== true) {
             $result .= '<a href="'.api_get_path(WEB_CODE_PATH).'announcements/announcements.php?'.$course_param.'">'.
-            $course_name.'</a><br/>';
+                $course_name.'</a><br/>';
         }
 
         return $result;
