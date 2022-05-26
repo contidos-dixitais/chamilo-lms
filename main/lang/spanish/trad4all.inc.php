@@ -8883,5 +8883,15 @@ $ExportLpQuizResults = "Exportacion de los resultados de los ejercicios en lecci
 $ElearningResults = "Resultados de lecciones";
 $InvoicingByAccessUrl = "Usuarios activos en sesiones por URL";
 $SelectTheNextLp = "Leccion siguiente";
-$QuestionInOtherExercises = "Esta pregunta está en otros ejercicios";
+$NoNotifications = "Niguna notificacion";
+$AllowsSkillsBySubCategories = "Permitir la asignacion de competencias por sub categoria";
+$ItAllowsTheAcquisitionOfSkillsBySubCategories = "Permite la adquisicion de competencia por validacion indeprendiente de sub categorias.";
+$SkillMinScore = "Score minimum";
+$InLp = "En una leccion";
+$ExportCoursesReports = "Reportes de cursos";
+$FillBlanksGlobal = "Rellenar blancos con resultado global";
+$MatchingGlobal = "Relacionar con resultado global";
+$HotSpotGlobal = "Zonas de imagen con resultado global";
+$MatchingDraggableGlobal = "Coincidencia arrastrable con resultado global";
+$QuestionInOtherExercises = "Esta pregunta está en otros ejercicios, ¿estás seguro de querer eliminarla?";
 ?>

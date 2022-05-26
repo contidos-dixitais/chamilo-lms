@@ -8855,5 +8855,15 @@ $ExportLpQuizResults = "Export LP Quiz results";
 $ElearningResults = "Learning path results";
 $InvoicingByAccessUrl = "Active users in sessions per URL";
 $SelectTheNextLp = "Next LP";
-$QuestionInOtherExercises = "This questions is shared on other exercices";
+$NoNotifications = "No notification";
+$AllowsSkillsBySubCategories = "Allow skills assignation by sub category";
+$ItAllowsTheAcquisitionOfSkillsBySubCategories = "It allows the acquisition of skills by sub categories independently.";
+$SkillMinScore = "Minimum score";
+$InLp = "In LP";
+$ExportCoursesReports = "Courses reports";
+$FillBlanksGlobal = "Fill blanks or form with global score";
+$MatchingGlobal = "Matching with global score";
+$HotSpotGlobal = "Image zones with global score";
+$MatchingDraggableGlobal = "Match by dragging with global score";
+$QuestionInOtherExercises = "This question is shared on other exercices, are you sure you want to delete it?";
 ?>

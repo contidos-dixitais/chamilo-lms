@@ -377,7 +377,8 @@ if ($is_allowedToEdit) {
                     case 'delete':
                         // deletes an exercise
                         if ($allowDelete) {
-                            $result = $objExerciseTmp->delete(true);
+                            $deleteQuestions = api_get_configuration_value('exercise_remove_delete_questions') ? true : false;
+                            $result = $objExerciseTmp->delete(false, $deleteQuestions);
                             if ($result) {
                                 Display::addFlash(Display::return_message(get_lang('ExerciseDeleted'), 'confirmation'));
                             }
@@ -583,7 +584,7 @@ if ($is_allowedToEdit) {
                 $query = "SELECT iid FROM $TBL_DOCUMENT
                           WHERE c_id = $courseId AND path='".Database::escape_string($file)."'";
                 $res = Database::query($query);
-                $row = Database :: fetch_array($res, 'ASSOC');
+                $row = Database::fetch_array($res, 'ASSOC');
                 api_item_property_update(
                     $courseInfo,
                     TOOL_DOCUMENT,
@@ -604,7 +605,7 @@ if ($is_allowedToEdit) {
                 $query = "SELECT iid FROM $TBL_DOCUMENT
                           WHERE c_id = $courseId AND path='".Database::escape_string($file)."'";
                 $res = Database::query($query);
-                $row = Database :: fetch_array($res, 'ASSOC');
+                $row = Database::fetch_array($res, 'ASSOC');
                 api_item_property_update(
                     $courseInfo,
                     TOOL_DOCUMENT,
