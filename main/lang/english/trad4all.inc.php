@@ -8865,5 +8865,6 @@ $FillBlanksGlobal = "Fill blanks or form with global score";
 $MatchingGlobal = "Matching with global score";
 $HotSpotGlobal = "Image zones with global score";
 $MatchingDraggableGlobal = "Match by dragging with global score";
+$ProgressInSessionReport = "Progress in session report";
 $QuestionInOtherExercises = "This question is shared on other exercices, are you sure you want to delete it?";
 ?>

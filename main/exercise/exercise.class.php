@@ -1923,6 +1923,7 @@ class Exercise
      * (unless used by other tests).
      *
      * @param bool $delete Whether to really delete the test (true) or only mark it (false = default)
+     * @param bool $deleteQuestions Whether to delete delete the test questions (true)
      *
      * @return bool Whether the operation was successful or not
      *
@@ -2004,7 +2005,7 @@ class Exercise
         }
 
         if ($delete) {
-            // Really delete the test (if questions where not deleted this would be orphans)
+            // Really delete the test (if questions where not deleted these would be orphaned)
             foreach ($questions as $order => $questionId) {
                 $question = Question::read($questionId, $this->course);
                 $question->delete($this->course_id);
