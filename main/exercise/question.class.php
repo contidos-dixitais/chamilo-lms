@@ -2689,7 +2689,13 @@ abstract class Question
         return (int) $result['c'];
     }
 
-
+    /**
+     * Check if a question is shared between quices
+     *
+     * @param int $questionId - question ID
+     *
+     * @return int - The number of quices where the question is used
+     */
     public static function isQuestionOnOtherQuizs(int $questionId)
     {
         $table = Database::get_course_table(TABLE_QUIZ_TEST_QUESTION);
@@ -2713,6 +2719,14 @@ abstract class Question
         return 0;        
     }
 
+    /**
+     * Gets the first quiz ID that uses a given question.
+     * The c_quiz_rel_question with lower iid is the master quiz.
+     *
+     * @param int $questionId - question ID
+     *
+     * @return int The quiz ID
+     */
     public static function getMasterQuizForQuestion($questionId)
     {
         $table = Database::get_course_table(TABLE_QUIZ_TEST_QUESTION);
