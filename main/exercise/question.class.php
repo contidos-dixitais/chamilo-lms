@@ -1441,10 +1441,17 @@ abstract class Question
 
         // if the question must be removed from all exercises
         if (!$deleteFromEx) {
+            $courseFilter = " AND c_id = $courseId";
+
+            if (true === api_get_configuration_value('quiz_question_allow_inter_course_linking')) {
+                $courseFilter = '';
+            }
+
             //update the question_order of each question to avoid inconsistencies
             $sql = "SELECT exercice_id, question_order
                     FROM $TBL_EXERCISE_QUESTION
-                    WHERE question_id = $id";
+                    WHERE question_id = $id
+                        $courseFilter";
 
             $res = Database::query($sql);
             if (Database::num_rows($res) > 0) {
@@ -1454,14 +1461,16 @@ abstract class Question
                                 SET question_order = question_order-1
                                 WHERE
                                     exercice_id = ".intval($row['exercice_id'])." AND
-                                    question_order > ".$row['question_order'];
+                                    question_order > ".$row['question_order']
+                                    .$courseFilter;
                         Database::query($sql);
                     }
                 }
             }
 
             $sql = "DELETE FROM $TBL_EXERCISE_QUESTION
-                    WHERE question_id = $id";
+                    WHERE question_id = $id
+                        $courseFilter";
             Database::query($sql);
 
             $sql = "DELETE FROM $TBL_QUESTIONS
@@ -1475,7 +1484,8 @@ abstract class Question
             // remove the category of this question in the question_rel_category table
             $sql = "DELETE FROM $TBL_QUIZ_QUESTION_REL_CATEGORY
                     WHERE
-                        question_id = $id";
+                        question_id = $id
+                        $courseFilter";
             Database::query($sql);
 
             // Add extra fields.
@@ -2721,7 +2731,7 @@ abstract class Question
 
     /**
      * Gets the first quiz ID that uses a given question.
-     * The c_quiz_rel_question with lower iid is the master quiz.
+     * The c_quiz_rel_question result with lower iid is the master quiz.
      *
      * @param int $questionId - question ID
      *
