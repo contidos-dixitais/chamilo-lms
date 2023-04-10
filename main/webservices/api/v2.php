@@ -839,6 +839,11 @@ try {
                 $restApi->getTestAverageResultsList($_POST['ids'], $fields)
             );
             break;
+        case Rest::GET_USER_COURSE_REGISTRATION:
+            $restResponse->setData(
+                $restApi->GetUserCourseRegistration()
+            );
+            break;
         default:
             throw new Exception(get_lang('InvalidAction'));
     }

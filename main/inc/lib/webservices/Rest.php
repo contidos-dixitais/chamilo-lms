@@ -131,6 +131,8 @@ class Rest extends WebService
     public const GET_TEST_UPDATES_LIST = 'get_test_updates_list';
     public const GET_TEST_AVERAGE_RESULTS_LIST = 'get_test_average_results_list';
 
+    public const GET_USER_COURSE_REGISTRATION = 'get_user_course_registration';
+
     /**
      * @var Session
      */
@@ -3065,6 +3067,56 @@ class Rest extends WebService
             }
         }
 
+        return $resultArray;
+    }
+
+    public function GetUserCourseRegistration()
+    {
+        $resultArray = [];
+
+        $username = $this->user->getUsername();
+        $users = api_get_configuration_value('webservice_user_registered_courses_stats');
+
+        if ($users) {
+            $coursesConfig = $users[$username];
+            $coursesIn = implode(',', $coursesConfig);
+
+            $tableTrackCourseAccess = Database::get_main_table(TABLE_STATISTIC_TRACK_E_COURSE_ACCESS);
+            $tableCourse = Database::get_main_table(TABLE_MAIN_COURSE);
+            $tableUser = Database::get_main_table(TABLE_MAIN_USER);
+            $tableSession = Database::get_main_table(TABLE_MAIN_SESSION);
+
+            $query = "
+                SELECT teca.session_id, s.name AS session_name, teca.c_id,
+                c.title AS course_name, c.code AS course_code,
+                teca.user_id, u.username, min(teca.login_course_date) as date
+                FROM $tableTrackCourseAccess teca
+                LEFT JOIN $tableCourse c on teca.c_id = c.id
+                LEFT JOIN $tableUser u on teca.user_id = u.id
+                LEFT JOIN $tableSession s on teca.session_id = s.id
+                WHERE c.id in ($coursesIn)
+                GROUP BY teca.user_id, teca.session_id
+                ORDER BY teca.c_id, teca.session_id, teca.user_id
+            ";
+
+            $result = Database::query($query);
+
+            if (Database::num_rows($result) > 0) {
+                while ($row = Database::fetch_assoc($result)) {
+                    $params = [
+                        'session_id' => $row['session_id'],
+                        'session_name' => $row['session_name'],
+                        'course_id' => $row['c_id'],
+                        'course_name' => $row['course_name'],
+                        'course_code' => $row['course_code'],
+                        'user_id' => $row['user_id'],
+                        'user_name' => $row['username'],
+                        'date' => $row['date']
+                    ];
+                    $resultArray[] = $params;
+                }
+            }
+        }
         return $resultArray;
     }
 

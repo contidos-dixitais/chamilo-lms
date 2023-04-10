@@ -2405,6 +2405,9 @@ INSERT INTO extra_field (extra_field_type, field_type, variable, display_text, d
 // external authentication system rather than user.id.
 // $_configuration['webservice_return_user_field'] = 'oauth2_id';
 
+// Configuration setting for the GET_USER_COURSE_REGISTRATION endpoint to get the courses that a user can get the stats
+// $_configuration['webservice_user_registered_courses_stats'] = ['user' => [1, 2, 3, 4]];
+
 // Set to true to hide settings completely in a sub-URL if the setting is disabled in the
 // main URL (where the access_url_changeable field = 0)
 // $_configuration['multiple_url_hide_disabled_settings'] = false;
