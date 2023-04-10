@@ -3070,7 +3070,7 @@ class Rest extends WebService
         return $resultArray;
     }
 
-    public function GetUserCourseRegistration()
+    public function GetUserCourseRegistration(string $startDate, string $endDate)
     {
         $resultArray = [];
 
@@ -3080,6 +3080,9 @@ class Rest extends WebService
         if ($users) {
             $coursesConfig = $users[$username];
             $coursesIn = implode(',', $coursesConfig);
+
+            $startDate = Database::escape_string($startDate);
+            $endDate = Database::escape_string($endDate);
 
             $tableTrackCourseAccess = Database::get_main_table(TABLE_STATISTIC_TRACK_E_COURSE_ACCESS);
             $tableCourse = Database::get_main_table(TABLE_MAIN_COURSE);
@@ -3095,6 +3098,7 @@ class Rest extends WebService
                 LEFT JOIN $tableUser u on teca.user_id = u.id
                 LEFT JOIN $tableSession s on teca.session_id = s.id
                 WHERE c.id in ($coursesIn)
+                AND teca.login_course_date BETWEEN '$startDate 00:00:00' AND '$endDate 23:59:59'
                 GROUP BY teca.user_id, teca.session_id
                 ORDER BY teca.c_id, teca.session_id, teca.user_id
             ";

@@ -840,8 +840,10 @@ try {
             );
             break;
         case Rest::GET_USER_COURSE_REGISTRATION:
+            $startDate = $_POST['start_date'];
+            $endDate = $_POST['end_date'];
             $restResponse->setData(
-                $restApi->GetUserCourseRegistration()
+                $restApi->GetUserCourseRegistration($startDate, $endDate)
             );
             break;
         default:
