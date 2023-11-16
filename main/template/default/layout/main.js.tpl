@@ -413,6 +413,8 @@ $(function() {
             });
         });
         {% endif %}
+
+        checkSessionTime();
     }
 
     socialLikes();
@@ -728,4 +730,19 @@ function copyTextToClipBoard(elementId)
 
     /* Copy the text inside the text field */
     document.execCommand("copy");
+}
+
+function checkSessionTime()
+{
+    fetch('/main/inc/ajax/session_clock.ajax.php')
+    .then(response => response.json())
+    .then(data => {
+        if (data.timeLeft <= 0) {
+            alert('Tu sesión ha caducado.');
+        } else {
+            console.log("we!!! " + data.timeLeft)
+            setTimeout(checkSessionTime, 60000);
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
