@@ -846,9 +846,16 @@ switch ($action) {
         break;
     case 'copy_survey':
         if (!empty($surveyId) && api_is_allowed_to_edit()) {
-            if(!empty($surveyCode)){
-                SurveyManager::copy_survey($surveyId, null, null, $surveyCode);
+            if (!empty($surveyCode)) {
 
+                if (SurveyManager::checkUniqueCode($surveyCode)) {
+                    SurveyManager::copy_survey($surveyId, null, null, $surveyCode);
+
+                } else {
+                    Display::addFlash(Display::return_message(get_lang('CodeAlreadyExists'), 'warning', false));
+                    header('Location: '.$listUrl);
+                    exit;
+                }
             } else{
                 SurveyManager::copy_survey($surveyId);
             }
