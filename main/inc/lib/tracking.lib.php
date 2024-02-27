@@ -8869,14 +8869,50 @@ class Tracking
                 }
 
                 if (in_array('time', $columnHeadersKeys)) {
-                    $time_spent_in_lp = self::get_time_spent_in_lp(
-                        $user->getId(),
-                        $courseInfo['code'],
-                        [$lpId],
-                        $sessionId
-                    );
+                    $timeCourse = null;
+                    if (Tracking::minimumTimeAvailable($sessionId, $courseInfo['real_id'])) {
+                        $timeCourse = Tracking::getCalculateTime($user->getId(), $courseInfo['real_id'], $sessionId);
+                    }
 
-                    $learningpathData[] = api_time_to_hms($time_spent_in_lp);
+                    if (!empty($timeCourse)) {
+                        $lpTime = $timeCourse[TOOL_LEARNPATH] ?? 0;
+                        $totalLpTime = isset($lpTime[$lpId]) ? (int) $lpTime[$lpId] : 0;
+
+                        if (Tracking::minimumTimeAvailable($sessionId, $courseInfo['real_id'])) {
+                            $accumulateWorkTime = learnpath::getAccumulateWorkTimePrerequisite(
+                                $lpId,
+                                $courseInfo['real_id']
+                            );
+                            if ($accumulateWorkTime > 0) {
+
+                                // If the time spent is less than necessary,
+                                // then we show an icon in the actions column indicating the warning
+                                $formattedLpTime = api_time_to_hms($totalLpTime);
+                                $formattedWorkTime = api_time_to_hms($accumulateWorkTime * 60);
+
+                                if ($totalLpTime < ($accumulateWorkTime * 60)) {
+                                    $linkMinTime = Display::return_icon(
+                                        'warning.png',
+                                        get_lang('LpMinTimeWarning').' - '.
+                                        $formattedLpTime.' / '.
+                                        $formattedWorkTime
+                                    );
+                                    $learningpathData[] = $linkMinTime.api_time_to_hms($totalLpTime);
+                                }
+                            } else {
+                                $learningpathData[] = api_time_to_hms($totalLpTime);
+                            }
+                        }
+                    } else {
+                        $time_spent_in_lp = self::get_time_spent_in_lp(
+                            $user->getId(),
+                            $courseInfo['code'],
+                            [$lpId],
+                            $sessionId
+                        );
+
+                        $learningpathData[] = api_time_to_hms($time_spent_in_lp);
+                    }
                 }
 
                 if (in_array('progress', $columnHeadersKeys)) {
