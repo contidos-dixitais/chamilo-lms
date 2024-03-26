@@ -9442,11 +9442,11 @@ function api_site_use_cookie_warning_cookie_exist()
  * Given a number of seconds, format the time to show hours, minutes and seconds.
  *
  * @param int    $time         The time in seconds
- * @param string $originFormat Optional. 
+ * @param string $originFormat Optional.
  * PHP (used for scorm)
  * JS (used in most cases and understood by excel)
  * LANG (used to present unit in the user language)
- * 
+ *
  * @return string (00h00'00")
  */
 function api_format_time($time, $originFormat = 'php')
@@ -10682,4 +10682,18 @@ function api_encrypt_hash($data, $secret)
   );
 
   return base64_encode($iv) . base64_encode($encrypted . $tag);
+}
+/**
+ *
+ *
+ * @return bool
+ */
+function api_extra_field_validation($extraField, $extraFieldValue) {
+    $fieldValue = new ExtraFieldValue('user');
+    $data = $fieldValue->get_item_id_from_field_variable_and_field_value($extraField, $extraFieldValue, false, true);
+
+    if ($data) {
+        return true;
+    }
+    return false;
 }
