@@ -691,6 +691,13 @@ if ($form->validate()) {
                     $extraValueExists = api_extra_field_validation($extra_field, $value);
                     if ($extraValueExists) {
                         $validForm = false;
+
+                        $element = $form->getElement($key);
+                        if ($element) {
+                            $attrs = ['style' => 'border-color: #a94442;'];
+                            $form->updateElementAttr([$element], $attrs);
+                        }
+
                         Display::addFlash(
                             Display::return_message(
                                 'El valor introducido en el campo '.$extra_field.' ya existe',
