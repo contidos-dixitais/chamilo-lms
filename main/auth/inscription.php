@@ -687,24 +687,26 @@ if ($form->validate()) {
                 $extra_value = Security::filter_filename(urldecode(key($value)));
                 $extra_field = substr($key,6);
 
-                if (in_array($extra_field, $extraFieldList)) {
-                    $extraValueExists = api_extra_field_validation($extra_field, $value);
-                    if ($extraValueExists) {
-                        $validForm = false;
+                if(!empty($extra_value)) {
+                    if (in_array($extra_field, $extraFieldList)) {
+                        $extraValueExists = api_extra_field_validation($extra_field, $value);
+                        if ($extraValueExists) {
+                            $validForm = false;
 
-                        $element = $form->getElement($key);
-                        if ($element) {
-                            $attrs = ['style' => 'border-color: #a94442;'];
-                            $form->updateElementAttr([$element], $attrs);
+                            $element = $form->getElement($key);
+                            if ($element) {
+                                $attrs = ['style' => 'border-color: #a94442;'];
+                                $form->updateElementAttr([$element], $attrs);
+                            }
+
+                            Display::addFlash(
+                                Display::return_message(
+                                    'El valor introducido en el campo '.$extra_field.' ya existe',
+                                    'error',
+                                    false
+                                )
+                            );
                         }
-
-                        Display::addFlash(
-                            Display::return_message(
-                                'El valor introducido en el campo '.$extra_field.' ya existe',
-                                'error',
-                                false
-                            )
-                        );
                     }
                 }
             }

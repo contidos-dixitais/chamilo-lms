@@ -203,7 +203,7 @@ function validate_data($users, $checkUniqueEmail = false)
         if (!empty($extraFields) && isset($extraFields['extra_fields'])) {
             $extraFieldList = $extraFields['extra_fields'];
             foreach ($extraFieldList as $extraFieldToCheck) {
-                if (isset($user[$extraFieldToCheck])) {
+                if (isset($user[$extraFieldToCheck]) && !empty($user[$extraFieldToCheck])) {
                     $valueExists = api_extra_field_validation($extraFieldToCheck, $user[$extraFieldToCheck]);
                     if ($valueExists) {
                         $user['message'] .= Display::return_message(get_lang('DuplicatedFieldAt').' '.$extraFieldToCheck, 'warning');
