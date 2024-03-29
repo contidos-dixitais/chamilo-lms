@@ -684,12 +684,12 @@ if ($form->validate()) {
         $extraFieldList = $extraFields['extra_fields'];
         foreach ($values as $key => $value) {
             if (substr($key, 0, 6) == 'extra_') {
-                $extra_value = Security::filter_filename(urldecode(key($value)));
+                $extra_value = Security::remove_XSS($value);
                 $extra_field = substr($key,6);
 
                 if(!empty($extra_value)) {
                     if (in_array($extra_field, $extraFieldList)) {
-                        $extraValueExists = api_extra_field_validation($extra_field, $value);
+                        $extraValueExists = api_extra_field_validation($extra_field, $extra_value);
                         if ($extraValueExists) {
                             $validForm = false;
 
