@@ -679,24 +679,27 @@ if ($form->validate()) {
 
     $values = $form->getSubmitValues(1);
 
-    $extraFieldsValids = true;
+    $extraFields = api_get_configuration_value('registration_extra_fields_to_check');
+    if (!empty($extraFields) && isset($extraFields['extra_fields'])) {
+        $extraFieldList = $extraFields['extra_fields'];
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 6) == 'extra_') {
+                $extra_value = Security::filter_filename(urldecode(key($value)));
+                $extra_field = substr($key,6);
 
-    foreach ($values as $key => $value) {
-        if (substr($key, 0, 6) == 'extra_') {
-            $extra_value = Security::filter_filename(urldecode(key($value)));
-            $extra_field = substr($key,6);
-
-            $extraValueExists = api_extra_field_validation($extra_field, $value);
-            if ($extraValueExists) {
-                $validForm = false;
-                $validForm = false;
-                Display::addFlash(
-                    Display::return_message(
-                        'El valor introducido en el campo '.$extra_field.' ya existe',
-                        'error',
-                        false
-                    )
-                );
+                if (in_array($extra_field, $extraFieldList)) {
+                    $extraValueExists = api_extra_field_validation($extra_field, $value);
+                    if ($extraValueExists) {
+                        $validForm = false;
+                        Display::addFlash(
+                            Display::return_message(
+                                'El valor introducido en el campo '.$extra_field.' ya existe',
+                                'error',
+                                false
+                            )
+                        );
+                    }
+                }
             }
         }
     }
