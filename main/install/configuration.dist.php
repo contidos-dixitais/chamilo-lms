@@ -2468,6 +2468,10 @@ INSERT INTO extra_field (extra_field_type, field_type, variable, display_text, d
 // 3. Uncomment $parentId var in src/Chamilo/CoreBundle/Entity/Career.php
 // $_configuration['career_hierarchy_enable'] = false;
 
+// Add minimum course time for certificate generation
+// This requieres to add a new course extra field "certificate_minimum_time"
+// $_configuration['certificate_generation_minimum_time'] = false;
+
 // KEEP THIS AT THE END
 // -------- Custom DB changes
 // Set to true to hide settings completely in a sub-URL if the setting is disabled in the

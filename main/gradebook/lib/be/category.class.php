@@ -2197,6 +2197,26 @@ class Category implements GradebookItem
             return false;
         }
 
+        $minTimeNeeded = api_get_configuration_value('certificate_generation_minimum_time') ? true : false;
+        if (!$minTimeNeeded) {
+            $certificateMinTime = CourseManager::get_course_extra_field_value(
+                'certificate_minimum_time',
+                api_get_course_id()
+            );
+
+            if ($certificateMinTime != null) {
+                $timeSpentOnTheCourse = Tracking::get_time_spent_on_the_course(
+                    $user_id,
+                    $courseId,
+                    $sessionId
+                );
+
+                if ($timeSpentOnTheCourse < ($certificateMinTime * 60)) {
+                    return false;
+                }
+            }
+        }
+
         // Block certification links depending gradebook configuration (generate certifications)
         if (empty($category->getGenerateCertificates())) {
             if ($userHasSkills) {
