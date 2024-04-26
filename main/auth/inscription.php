@@ -99,6 +99,12 @@ if (api_get_configuration_value('allow_redirect_to_session_after_inscription_abo
     }
 }
 
+if (api_get_configuration_value('user_registration_save_session_id')) {
+    if (!empty($sessionRedirect)) {
+        Session::write('user_session_save', $sessionRedirect);
+    }
+}
+
 // Direct Link Subscription feature #5299
 $course_code_redirect = isset($_REQUEST['c']) && !empty($_REQUEST['c']) ? $_REQUEST['c'] : null;
 $exercise_redirect = isset($_REQUEST['e']) && !empty($_REQUEST['e']) ? $_REQUEST['e'] : null;
@@ -646,6 +652,7 @@ if (!$formContainsSendButton) {
 
 $course_code_redirect = Session::read('course_redirect');
 $sessionToRedirect = Session::read('session_redirect');
+$sessionToSave = Session::read('user_session_save');
 
 if ($extraConditions && $extraFieldsLoaded) {
     // Set conditions as "required" and also change the labels
@@ -715,6 +722,11 @@ if ($form->validate()) {
                     $extra_value
                 );
             }
+        }
+
+        $saveSessionRegistration = api_get_configuration_value('user_registration_save_session_id');
+        if ($saveSessionRegistration && !empty($sessionToSave)) {
+            $extras['user_registration_session_id'] = $sessionToSave;
         }
 
         $status = isset($values['status']) ? $values['status'] : STUDENT;

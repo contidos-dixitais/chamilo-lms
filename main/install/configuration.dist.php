@@ -1675,6 +1675,10 @@ ALTER TABLE notification_event_rel_user ADD CONSTRAINT FK_USER FOREIGN KEY (user
 // Add help text to put 2 names in registration form
 //$_configuration['registration_add_helptext_for_2_names'] = false;
 
+// Save the session ID if the user starts the registration from the session catalog
+// Before enabling it, make sure you added an User extra field of type text, called user_registration_session_id
+//$_configuration['user_registration_save_session_id'] = false;
+
 // Allow career/promotions in global announcements
 // ALTER TABLE sys_announcement ADD COLUMN career_id INT DEFAULT 0;
 // ALTER TABLE sys_announcement ADD COLUMN promotion_id INT DEFAULT 0;
