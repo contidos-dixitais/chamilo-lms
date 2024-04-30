@@ -2533,3 +2533,6 @@ INSERT INTO extra_field_options (field_id, option_value, display_text, priority,
 
 // Set the following parameter to true to enable student to be assign as teacher of a course
 //$_configuration['course_allow_student_role_to_be_teacher'] = false;
+
+// Enables copying the list of sessions a user is registered for to the clipboard when the 'Show Sessions' button is clicked
+// $_configuration['admin_user_list_allow_copy_to_clipboard_sessions_list'] = false;

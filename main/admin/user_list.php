@@ -67,6 +67,8 @@ if ($variables) {
 
 Session::write('variables_to_show', $variablesToShow);
 
+$allowSessionCopyToClipboard = api_get_configuration_value('admin_user_list_allow_copy_to_clipboard_sessions_list');
+
 $htmlHeadXtra[] = '<script>
 function load_course_list (div_course,my_user_id) {
      $.ajax({
@@ -85,19 +87,29 @@ function load_course_list (div_course,my_user_id) {
 }
 
 function load_session_list(div_session, my_user_id) {
-     $.ajax({
-        contentType: "application/x-www-form-urlencoded",
-        beforeSend: function(myObject) {
-            $("div#"+div_session).html("<img src=\'../inc/lib/javascript/indicator.gif\' />"); },
-        type: "POST",
-        url: "'.$urlSession.'",
-        data: "user_id="+my_user_id,
-        success: function(datos) {
-            $("div#"+div_session).html(datos);
-            $("div#div_s_"+my_user_id).attr("class","blackboard_show");
-            $("div#div_s_"+my_user_id).attr("style","");
-        }
-    });
+    $.ajax({
+       contentType: "application/x-www-form-urlencoded",
+       beforeSend: function(myObject) {
+           $("div#"+div_session).html("<img src=\'../inc/lib/javascript/indicator.gif\' />"); },
+       type: "POST",
+       url: "'.$urlSession.'",
+       data: "user_id="+my_user_id,
+       success: function(datos) {
+           $("div#"+div_session).html(datos);
+           $("div#div_s_"+my_user_id).attr("class","blackboard_show");
+           $("div#div_s_"+my_user_id).attr("style","");'.
+           ($allowSessionCopyToClipboard ?
+           'var textToCopy = datos.replace(/<br\s*\/?>/gi, \'\n\');
+           navigator.clipboard.writeText(textToCopy)
+           .then(() => {
+               console.error("Text copied to clipboard");
+           })
+           .catch(err => {
+               console.error("Error copying to clipboard: ", err);
+           });'
+           : '')
+       .'}
+   });
 }
 
 '.UserManager::getScriptFunctionForActiveFilter().'
