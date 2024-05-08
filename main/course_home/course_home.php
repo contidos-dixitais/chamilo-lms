@@ -32,6 +32,11 @@ use Fhaculty\Graph\Graph;
 $use_anonymous = true;
 require_once __DIR__.'/../inc/global.inc.php';
 
+$user_id = api_get_user_id();
+$course_code = api_get_course_id();
+$courseId = api_get_course_int_id();
+$sessionId = api_get_session_id();
+
 $js = '<script>'.api_get_language_translate_html().'</script>';
 $htmlHeadXtra[] = $js;
 $htmlHeadXtra[] = '<script>
@@ -197,16 +202,27 @@ $htmlHeadXtra[] = '<script>
                 }
             });
         });
+
+        setInterval(function() {
+            $.ajax({
+                type: "GET",
+                url: "'.api_get_path(WEB_AJAX_PATH).'course_home.ajax.php?'.api_get_cidreq().'&a=get_counter&course_id='.$courseId.'&session_id='.$sessionId.'",
+                success: function (data) {
+                    $("#course_counter").replaceWith(data);
+                },
+                error: function() {
+                    console.log("error ejecucion ");
+                }
+            })}
+            ,5000);
     });
+
 </script>';
 
 // The section for the tabs
 $this_section = SECTION_COURSES;
 
-$user_id = api_get_user_id();
-$course_code = api_get_course_id();
-$courseId = api_get_course_int_id();
-$sessionId = api_get_session_id();
+
 $show_message = '';
 
 if (api_is_invitee()) {
@@ -526,8 +542,22 @@ if ($allow === true) {
         }
     }
 }
+ 
+//get_lang
 
-$content = '<div id="course_tools">'.$diagram.$content.'</div>';
+$contetCounter = "";
+$showCounter = api_get_configuration_value('show_time_counter_in_course_home');
+
+if ($showCounter) {
+    $counter = Tracking::get_time_spent_on_the_course($user_id, $course_id, $session_id);
+    $contetCounter = '<div id = "course_counter" style=" font-size: 25px; text-align: right;">
+                        <span style = "background-color: #E5E5E5; padding: 5px; border-radius: 4px">
+                            '.get_lang('TimeInCourse').': <strong>'.gmdate("H:i",$counter).'</strong>
+                        </span>
+                    </div> ';
+}
+
+$content=$contetCounter.'<div id="course_tools">'.$diagram.$content.'</div>';
 
 // Deleting the objects
 Session::erase('_gid');

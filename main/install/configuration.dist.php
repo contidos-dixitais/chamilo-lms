@@ -2128,6 +2128,9 @@ ALTER TABLE gradebook_comment ADD CONSTRAINT FK_C3B70763AD3ED51C FOREIGN KEY (gr
 // Show invisible LP in the course home for students. BT#17744
 //$_configuration['show_invisible_lp_in_course_home'] = true;
 
+//Show a counter of the time that a user was in a course.
+//$_configuration['show_time_counter_in_course_home']=false;
+
 // Show start/end date in LP list for students.
 //$_configuration['lp_start_and_end_date_visible_in_student_view'] = true;
 

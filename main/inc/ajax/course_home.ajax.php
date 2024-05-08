@@ -748,7 +748,32 @@ switch ($action) {
         }
 
         break;
-    default:
+    
+    case 'get_counter':
+        require_once __DIR__.'/../global.inc.php';
+        $userId = api_get_user_id();
+        $courseId = isset($_REQUEST['course_id']) ? (int) $_REQUEST['course_id'] : 0;
+        $sessionId = isset($_REQUEST['session_id']) ? (int) $_REQUEST['session_id'] : 0;
+        
+
+        $contentCounter = "";
+        $showCounter = api_get_configuration_value('show_time_counter_in_course_home');
+
+        if ($showCounter) {
+            $counter = Tracking::get_time_spent_on_the_course($userId, $courseId, $sessionId);
+            $contentCounter = '<div id = "course_counter" style=" font-size: 25px; text-align: right;">
+                                <span style = "background-color: #E5E5E5; padding: 5px; border-radius: 4px">
+                                    '.get_lang('TimeInCourse').': <strong>'.gmdate("H:i",$counter).'</strong>
+                                </span>
+                            </div> ';
+        }
+        
+        echo $contentCounter;
+        break;
+
+        default:
         echo '';
+
+
 }
 exit;
