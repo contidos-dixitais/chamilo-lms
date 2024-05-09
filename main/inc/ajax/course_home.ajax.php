@@ -748,26 +748,28 @@ switch ($action) {
         }
 
         break;
-    
     case 'get_counter':
         require_once __DIR__.'/../global.inc.php';
         $userId = api_get_user_id();
         $courseId = isset($_REQUEST['course_id']) ? (int) $_REQUEST['course_id'] : 0;
         $sessionId = isset($_REQUEST['session_id']) ? (int) $_REQUEST['session_id'] : 0;
-        
 
         $contentCounter = "";
         $showCounter = api_get_configuration_value('show_time_counter_in_course_home');
+        $extraFields = SessionManager::getFilteredExtraFields($sessionId,['show_time_counter']);
+        $optionCounter = false;
 
-        if ($showCounter) {
+        if ($extraFields[0]['value'] == 1) {
+            $optionCounter = true;
+        }
+
+        if ($showCounter && $session_id != 0 && $optionCounter) {
             $counter = Tracking::get_time_spent_on_the_course($userId, $courseId, $sessionId);
             $contentCounter = '<span id="course_counter" style = "text-align: left; padding: 5px; ">
                                     <strong>'.gmdate("H:i",$counter).'</strong>
                                 </span>';
-                                
-                           
         }
-        
+
         echo $contentCounter;
         break;
 
