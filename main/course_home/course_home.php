@@ -542,8 +542,6 @@ if ($allow === true) {
         }
     }
 }
- 
-//get_lang
 
 $contetCounter = "";
 $showCounter = api_get_configuration_value('show_time_counter_in_course_home');
