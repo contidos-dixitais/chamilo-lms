@@ -545,14 +545,28 @@ if ($allow === true) {
 
 $contetCounter = "";
 $showCounter = api_get_configuration_value('show_time_counter_in_course_home');
+$extraFields = SessionManager::getFilteredExtraFields($sessionId);
+$optionCounter=false;
 
-if ($showCounter) {
-    $counter = Tracking::get_time_spent_on_the_course($user_id, $course_id, $session_id);
-    $contetCounter = '<div id = "course_counter" style=" font-size: 25px; text-align: right;">
-                        <span style = "background-color: #E5E5E5; padding: 5px; border-radius: 4px">
-                            '.get_lang('TimeInCourse').': <strong>'.gmdate("H:i",$counter).'</strong>
-                        </span>
-                    </div> ';
+foreach ($extraFields as $item) {
+    if ($item['variable'] == 'show_time_counter' && $item['value'] == 1){
+        $optionCounter = true;
+    }
+}
+
+$userInfo = api_get_user_info($userId);
+$nombre = $userInfo['firstname'];
+
+if (($session_id!=0) && ($optionCounter=true)) {
+    if ($showCounter) {
+        $counter = Tracking::get_time_spent_on_the_course($user_id, $course_id, $session_id);
+        $contetCounter = '<div  style="display: flex; justify-content: space-between; align-items: center; font-size: 25px; background-color: #E5E5E5; border-radius: 4px">
+                            <span id = "course_counter" style =  padding: 5px; ">
+                                <strong>'.gmdate("H:i",$counter).'</strong>
+                            </span>
+                            <span style = "font-size: 15px; padding: 5px; "> Hola '.$nombre.', llevas '.gmdate("H",$counter).' horas y '.gmdate("i",$counter).' minutos en este curso  </span>
+                        </div> ';
+    }
 }
 
 $content=$contetCounter.'<div id="course_tools">'.$diagram.$content.'</div>';

@@ -761,11 +761,11 @@ switch ($action) {
 
         if ($showCounter) {
             $counter = Tracking::get_time_spent_on_the_course($userId, $courseId, $sessionId);
-            $contentCounter = '<div id = "course_counter" style=" font-size: 25px; text-align: right;">
-                                <span style = "background-color: #E5E5E5; padding: 5px; border-radius: 4px">
-                                    '.get_lang('TimeInCourse').': <strong>'.gmdate("H:i",$counter).'</strong>
-                                </span>
-                            </div> ';
+            $contentCounter = '<span id="course_counter" style = "text-align: left; padding: 5px; ">
+                                    <strong>'.gmdate("H:i",$counter).'</strong>
+                                </span>';
+                                
+                           
         }
         
         echo $contentCounter;
