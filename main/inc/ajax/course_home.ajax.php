@@ -763,9 +763,12 @@ switch ($action) {
             $optionCounter = true;
         }
 
-        if ($showCounter && $session_id != 0 && $optionCounter) {
+        if ($showCounter && $sessionId != 0 && $optionCounter) {
+
+            Event::eventCourseLoginUpdate($courseId, $userId, $sessionId, 0.08);
+
             $counter = Tracking::get_time_spent_on_the_course($userId, $courseId, $sessionId);
-            $contentCounter = '<span id="course_counter" style = "text-align: left; padding: 5px; ">
+            $contentCounter = '<span id="course_counter" style = "padding: 5px; ">
                                     <strong>'.gmdate("H:i",$counter).'</strong>
                                 </span>';
         }

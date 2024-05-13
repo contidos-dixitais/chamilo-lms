@@ -545,24 +545,38 @@ if ($allow === true) {
 
 $contentCounter = "";
 $showCounter = api_get_configuration_value('show_time_counter_in_course_home');
-$extraFields = SessionManager::getFilteredExtraFields($sessionId,['show_time_counter']);
+$showOnEntryCounter = api_get_configuration_value('show_time_on_entry_counter_in_course_home');
+$extraFieldCounter = SessionManager::getFilteredExtraFields($sessionId,["show_time_counter"]);
+$extraFieldOnEntryCounter = SessionManager::getFilteredExtraFields($sessionId,["show_time_on_entry_counter"]);
 $optionCounter = false;
+$optionOnEntryCounter = false;
 
-if ($extraFields[0]['value'] == 1) {
+if ($extraFieldCounter[0]['value'] == 1) {
     $optionCounter = true;
+}
+
+if ($extraFieldOnEntryCounter[0]['value'] == 1) {
+    $optionOnEntryCounter = true;
+    
 }
 
 $userInfo = api_get_user_info($userId);
 $firstName = $userInfo['firstname'];
 
-if ($showCounter && $session_id != 0 && $optionCounter) {
+if ($session_id != 0) {
     $counter = Tracking::get_time_spent_on_the_course($user_id, $course_id, $session_id);
-    $contentCounter = '<div  style="display: flex; justify-content: space-between; align-items: center; font-size: 25px; background-color: #E5E5E5; border-radius: 4px">
-                        <span id = "course_counter" style =  padding: 5px; ">
-                            <strong>'.gmdate("H:i",$counter).'</strong>
-                        </span>
-                        <span style = "font-size: 15px; padding: 5px; ">'.sprintf(get_lang('TimeInCourse'), $firstName, gmdate("H",$counter), gmdate("i",$counter)).'</span>
-                    </div> ';
+    $contentCounter = '<div  style="display: flex; justify-content: space-between; align-items: center; font-size: 25px; background-color: #E5E5E5; border-radius: 4px">';
+        if ($showCounter && $optionCounter) {
+            $contentCounter .= '<span id = "course_counter" style =  padding: 5px; ">
+                                    <strong>'.gmdate("H:i",$counter).'</strong>
+                                </span>';
+        }
+        if ($showOnEntryCounter && $optionOnEntryCounter) {
+            $contentCounter .= '<span style = "font-size: 15px; padding: 5px; ">'
+                                    .sprintf(get_lang('TimeInCourse'), $firstName, gmdate("H",$counter), gmdate("i",$counter)).
+                                '</span>';
+        } 
+    $contentCounter.='</div>';
 }
 
 $content=$contentCounter.'<div id="course_tools">'.$diagram.$content.'</div>';
