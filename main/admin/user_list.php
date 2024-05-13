@@ -1137,6 +1137,8 @@ $extra_search_options = '';
 if (0 == $table->get_total_number_of_items()) {
     if (api_get_multiple_access_url() && isset($_REQUEST['keyword'])) {
         $keyword = Database::escape_string($_REQUEST['keyword']);
+        $keyword = trim($keyword);
+        $keyword = preg_replace('/\s+/', ' ', $keyword);
         $conditions = ['username' => $keyword];
         $user_list = UserManager::get_user_list(
             $conditions,
