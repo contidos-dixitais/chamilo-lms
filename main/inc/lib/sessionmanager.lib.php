@@ -8079,17 +8079,25 @@ class SessionManager
 
         $form->addElement('checkbox', 'show_description', null, get_lang('ShowDescription'));
 
+        $options = [
+            SESSION_VISIBLE_READ_ONLY => get_lang('SessionReadOnly'),
+            SESSION_VISIBLE => get_lang('SessionAccessible'),
+            SESSION_INVISIBLE => api_ucfirst(get_lang('SessionNotAccessible')),
+        ];
+
+        $SessionAccesibleConfigOption = api_get_configuration_value('dont_show_SessionAccessible_option');
+        if ($SessionAccesibleConfigOption) {
+            array_splice($options,1,1);
+        }
+
         $visibilityGroup = [];
-        $visibilityGroup[] = $form->createElement(
-            'select',
-            'session_visibility',
-            null,
-            [
-                SESSION_VISIBLE_READ_ONLY => get_lang('SessionReadOnly'),
-                SESSION_VISIBLE => get_lang('SessionAccessible'),
-                SESSION_INVISIBLE => api_ucfirst(get_lang('SessionNotAccessible')),
-            ]
-        );
+            $visibilityGroup[] = $form->createElement(
+                'select',
+                'session_visibility',
+                null,
+               $options
+            );
+
         $form->addGroup(
             $visibilityGroup,
             'visibility_group',
