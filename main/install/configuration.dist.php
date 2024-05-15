@@ -2134,6 +2134,9 @@ ALTER TABLE gradebook_comment ADD CONSTRAINT FK_C3B70763AD3ED51C FOREIGN KEY (gr
 // Show all student publications (from course and from all sessions) in the work/pending.php page if true. BT#18352
 //$_configuration['assignment_base_course_teacher_access_to_all_session'] = true;
 
+// Removes the SessionAccessible option from advanced settings on a session. 
+//$_configuration['dont_show_SessionAccessible_option'] = true;
+
 // Show a link to the work/pending.php page in my courses (user_portal)
 //$_configuration['my_courses_show_pending_work'] = true;
 
