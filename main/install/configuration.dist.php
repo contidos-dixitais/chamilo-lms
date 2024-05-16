@@ -2132,10 +2132,6 @@ ALTER TABLE gradebook_comment ADD CONSTRAINT FK_C3B70763AD3ED51C FOREIGN KEY (gr
 // Requires a session checkbox extra field called "show_time_counter_on_course".
 //$_configuration['course_home_show_time_counter'] = false;
 
-// Show the total time spent on the course at the course home.
-// Requires a session checkbox extra field called "show_time_spent_on_course".
-//$_configuration['course_home_show_time_spent_on_course'] = false;
-
 // Show start/end date in LP list for students.
 //$_configuration['lp_start_and_end_date_visible_in_student_view'] = true;
 

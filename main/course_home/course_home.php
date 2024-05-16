@@ -528,38 +528,41 @@ if ($allow === true) {
 }
 
 $showCourseTimeCounterOnSessions = api_get_configuration_value('course_home_show_time_counter');
-$showCourseTimeSpentOnSessions = api_get_configuration_value('course_home_show_time_spent_on_course');
 $showCourseTimeCounterOnThisSession = SessionManager::getFilteredExtraFields($sessionId,["show_time_counter_on_course"]);
-$showCourseTimeSpentOnThisSession = SessionManager::getFilteredExtraFields($sessionId,["show_time_spent_on_course"]);
 
 $showCourseTimeSpent = false;
-$showTimeSpent = false;
 
 if (!empty($showCourseTimeCounterOnThisSession) && $showCourseTimeCounterOnThisSession[0]['value']) {
     $showCourseTimeSpent = true;
-}
-
-if (!empty($showCourseTimeSpentOnThisSession) && $showCourseTimeSpentOnThisSession[0]['value']) {
-    $showTimeSpent = true;
 }
 
 $contentCounter = '';
 
 if ($sessionId != 0) {
     $timeSpentOnCourse = Tracking::get_time_spent_on_the_course($user_id, $courseId, $sessionId);
-    $contentCounter = '<div style="text-align: right; font-size: 25px; margin-bottom: 5px;">';
+    $contentCounter = '<div id="course_counter" style="text-align: right; font-size: 14px; margin-bottom: 10px;margin-right: 35px;">';
         if ($showCourseTimeCounterOnSessions && $showCourseTimeSpent) {
-            $contentCounter .= '<span style="font-size:15px; padding:5px; color: #008B9F;">'.
+            $userInfo = api_get_user_info($user_id);
+            $firstName = $userInfo['firstname'];
+            $hours = gmdate("H",$timeSpentOnCourse);
+            $minutes = gmdate("i",$timeSpentOnCourse);
+            $contentCounter .= '<span style="padding:5px; color: #008B9F;">'.
                                     sprintf(get_lang('TimeInCourse'), $firstName).
                                 '</span>
-                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; margin:1px;">'
-                                    .gmdate("H",$timeSpentOnCourse).
-                                '<span/>
-                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; margin:1px;"> :
-                                <span/>
-                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; margin:1px;">'
-                                .gmdate("i",$timeSpentOnCourse).
-                                '<span/>';
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
+                                    .$hours[0].
+                                '</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
+                                    .$hours[1].
+                                '</span>
+                                <span style = " color: #008B9F; border-radius: 4px; margin: 4px;">:
+                                </span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
+                                    .$minutes[0].
+                                '</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
+                                    .$minutes[1].
+                                '</span>';
 
             $htmlHeadXtra[] = '<script>
                 setInterval(function() {
@@ -576,7 +579,7 @@ if ($sessionId != 0) {
                     ,1000);
             </script>';
         }
-        
+
     $contentCounter .= '</div>';
 }
 
