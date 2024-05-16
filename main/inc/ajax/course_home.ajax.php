@@ -754,31 +754,30 @@ switch ($action) {
         $courseId = isset($_REQUEST['course_id']) ? (int) $_REQUEST['course_id'] : 0;
         $sessionId = isset($_REQUEST['session_id']) ? (int) $_REQUEST['session_id'] : 0;
 
-        $contentCounter = "";
-        $showCounter = api_get_configuration_value('show_time_counter_in_course_home');
-        $extraFields = SessionManager::getFilteredExtraFields($sessionId,['show_time_counter']);
-        $optionCounter = false;
+        $contentCounter = '';
+        $showCourseTimeCounterOnSessions = api_get_configuration_value('course_home_show_time_counter');
+        $showCourseTimeCounterOnThisSession = SessionManager::getFilteredExtraFields($sessionId,['show_time_counter_on_course']);
+        $showCourseTimeSpent = false;
 
-        if ($extraFields[0]['value'] == 1) {
-            $optionCounter = true;
+        if (!empty($showCourseTimeCounterOnThisSession) && $showCourseTimeCounterOnThisSession[0]['value']) {
+            $showCourseTimeSpent = true;
         }
 
-        if ($showCounter && $sessionId != 0 && $optionCounter) {
-
+        if ($showCourseTimeCounterOnSessions && $sessionId != 0 && $showCourseTimeSpent) {
             Event::eventCourseLoginUpdate($courseId, $userId, $sessionId, 0.08);
 
-            $counter = Tracking::get_time_spent_on_the_course($userId, $courseId, $sessionId);
-            $contentCounter = '<span id="course_counter" style = "padding: 5px; ">
-                                    <strong>'.gmdate("H:i",$counter).'</strong>
-                                </span>';
+            $timeSpentOnCourse = Tracking::get_time_spent_on_the_course($userId, $courseId, $sessionId);
+            $userInfo = api_get_user_info($user_id);
+            $firstName = $userInfo['firstname'];
+            
+            $contentCounter = '<span style="font-size:15px; padding:5px;">'.
+                                    sprintf(get_lang('TimeInCourse'), $firstName,gmdate("H",$timeSpentOnCourse),gmdate("i",$timeSpentOnCourse)).
+                                '</span><span style"background-color:#008B9F; color: white;">hola<span/>';
         }
 
         echo $contentCounter;
         break;
-
-        default:
+    default:
         echo '';
-
-
 }
 exit;

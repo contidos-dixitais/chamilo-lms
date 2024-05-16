@@ -32,11 +32,6 @@ use Fhaculty\Graph\Graph;
 $use_anonymous = true;
 require_once __DIR__.'/../inc/global.inc.php';
 
-$user_id = api_get_user_id();
-$course_code = api_get_course_id();
-$courseId = api_get_course_int_id();
-$sessionId = api_get_session_id();
-
 $js = '<script>'.api_get_language_translate_html().'</script>';
 $htmlHeadXtra[] = $js;
 $htmlHeadXtra[] = '<script>
@@ -202,27 +197,16 @@ $htmlHeadXtra[] = '<script>
                 }
             });
         });
-
-        setInterval(function() {
-            $.ajax({
-                type: "GET",
-                url: "'.api_get_path(WEB_AJAX_PATH).'course_home.ajax.php?'.api_get_cidreq().'&a=get_counter&course_id='.$courseId.'&session_id='.$sessionId.'",
-                success: function (data) {
-                    $("#course_counter").replaceWith(data);
-                },
-                error: function() {
-                    console.log("error ejecucion ");
-                }
-            })}
-            ,5000);
     });
-
 </script>';
 
 // The section for the tabs
 $this_section = SECTION_COURSES;
 
-
+$user_id = api_get_user_id();
+$course_code = api_get_course_id();
+$courseId = api_get_course_int_id();
+$sessionId = api_get_session_id();
 $show_message = '';
 
 if (api_is_invitee()) {
@@ -543,43 +527,60 @@ if ($allow === true) {
     }
 }
 
-$contentCounter = "";
-$showCounter = api_get_configuration_value('show_time_counter_in_course_home');
-$showOnEntryCounter = api_get_configuration_value('show_time_on_entry_counter_in_course_home');
-$extraFieldCounter = SessionManager::getFilteredExtraFields($sessionId,["show_time_counter"]);
-$extraFieldOnEntryCounter = SessionManager::getFilteredExtraFields($sessionId,["show_time_on_entry_counter"]);
-$optionCounter = false;
-$optionOnEntryCounter = false;
+$showCourseTimeCounterOnSessions = api_get_configuration_value('course_home_show_time_counter');
+$showCourseTimeSpentOnSessions = api_get_configuration_value('course_home_show_time_spent_on_course');
+$showCourseTimeCounterOnThisSession = SessionManager::getFilteredExtraFields($sessionId,["show_time_counter_on_course"]);
+$showCourseTimeSpentOnThisSession = SessionManager::getFilteredExtraFields($sessionId,["show_time_spent_on_course"]);
 
-if ($extraFieldCounter[0]['value'] == 1) {
-    $optionCounter = true;
+$showCourseTimeSpent = false;
+$showTimeSpent = false;
+
+if (!empty($showCourseTimeCounterOnThisSession) && $showCourseTimeCounterOnThisSession[0]['value']) {
+    $showCourseTimeSpent = true;
 }
 
-if ($extraFieldOnEntryCounter[0]['value'] == 1) {
-    $optionOnEntryCounter = true;
-    
+if (!empty($showCourseTimeSpentOnThisSession) && $showCourseTimeSpentOnThisSession[0]['value']) {
+    $showTimeSpent = true;
 }
 
-$userInfo = api_get_user_info($userId);
-$firstName = $userInfo['firstname'];
+$contentCounter = '';
 
-if ($session_id != 0) {
-    $counter = Tracking::get_time_spent_on_the_course($user_id, $course_id, $session_id);
-    $contentCounter = '<div  style="display: flex; justify-content: space-between; align-items: center; font-size: 25px; background-color: #E5E5E5; border-radius: 4px">';
-        if ($showCounter && $optionCounter) {
-            $contentCounter .= '<span id = "course_counter" style =  padding: 5px; ">
-                                    <strong>'.gmdate("H:i",$counter).'</strong>
-                                </span>';
+if ($sessionId != 0) {
+    $timeSpentOnCourse = Tracking::get_time_spent_on_the_course($user_id, $courseId, $sessionId);
+    $contentCounter = '<div style="text-align: right; font-size: 25px; margin-bottom: 5px;">';
+        if ($showCourseTimeCounterOnSessions && $showCourseTimeSpent) {
+            $contentCounter .= '<span style="font-size:15px; padding:5px; color: #008B9F;">'.
+                                    sprintf(get_lang('TimeInCourse'), $firstName).
+                                '</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; margin:1px;">'
+                                    .gmdate("H",$timeSpentOnCourse).
+                                '<span/>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; margin:1px;"> :
+                                <span/>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; margin:1px;">'
+                                .gmdate("i",$timeSpentOnCourse).
+                                '<span/>';
+
+            $htmlHeadXtra[] = '<script>
+                setInterval(function() {
+                    $.ajax({
+                        type: "GET",
+                        url: "'.api_get_path(WEB_AJAX_PATH).'course_home.ajax.php?'.api_get_cidreq().'&a=get_counter&course_id='.$courseId.'&session_id='.$sessionId.'",
+                        success: function (data) {
+                            $("#course_counter").replaceWith(data);
+                        },
+                        error: function() {
+                            console.log("Error updating counter ");
+                        }
+                    })}
+                    ,1000);
+            </script>';
         }
-        if ($showOnEntryCounter && $optionOnEntryCounter) {
-            $contentCounter .= '<span style = "font-size: 15px; padding: 5px; ">'
-                                    .sprintf(get_lang('TimeInCourse'), $firstName, gmdate("H",$counter), gmdate("i",$counter)).
-                                '</span>';
-        } 
-    $contentCounter.='</div>';
+        
+    $contentCounter .= '</div>';
 }
 
-$content=$contentCounter.'<div id="course_tools">'.$diagram.$content.'</div>';
+$content = $contentCounter.'<div id="course_tools">'.$diagram.$content.'</div>';
 
 // Deleting the objects
 Session::erase('_gid');

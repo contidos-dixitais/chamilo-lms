@@ -2128,16 +2128,13 @@ ALTER TABLE gradebook_comment ADD CONSTRAINT FK_C3B70763AD3ED51C FOREIGN KEY (gr
 // Show invisible LP in the course home for students. BT#17744
 //$_configuration['show_invisible_lp_in_course_home'] = true;
 
-// Show a counter of the time that a user was in a session that updates every few seconds(showed on  the left).
-// You must create a session extra field "show_time_counter_upload" to make it work.
-//$_configuration['show_time_counter_in_course_home']=false;
+// Show a counter at the course home, the value is updated every second.
+// Requires a session checkbox extra field called "show_time_counter_on_course".
+//$_configuration['course_home_show_time_counter'] = false;
 
-// Show a counter of the time that a user was in a session that doesn't upload(showed on  the right).
-// You must create a session extra field "show_time_counter" to make it work.
-//$_configuration['show_time_on_entry_counter_in_course_home']=true;
-
-//show a counter of the time a user was on a course
-//$_configuration['show_time_on_entry_counter_in_course_home']=true;
+// Show the total time spent on the course at the course home.
+// Requires a session checkbox extra field called "show_time_spent_on_course".
+//$_configuration['course_home_show_time_spent_on_course'] = false;
 
 // Show start/end date in LP list for students.
 //$_configuration['lp_start_and_end_date_visible_in_student_view'] = true;
