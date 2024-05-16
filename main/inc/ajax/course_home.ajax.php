@@ -772,23 +772,12 @@ switch ($action) {
             $hours = gmdate("H",$timeSpentOnCourse);
             $minutes = gmdate("i",$timeSpentOnCourse);
             $contentCounter = '<div id="course_counter" style="text-align: right; font-size: 14px; margin-bottom: 10px; margin-right: 35px;">
-                                    <span style="padding:5px; color: #008B9F;">'.
-                                        sprintf(get_lang('TimeInCourse'), $firstName).
-                                    '</span>
-                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                        .$hours[0].
-                                    '</span>
-                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                        .$hours[1].
-                                    '</span>
-                                    <span style = " color: #008B9F; border-radius: 4px; margin: 4px;">:
-                                    </span>
-                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                        .$minutes[0].
-                                    '</span>
-                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                        .$minutes[1].
-                                    '</span>
+                                    <span style="padding:5px; color: #008B9F;">'.sprintf(get_lang('TimeInCourse'), $firstName).'</span>
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">' .$hours[0].'</span>
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$hours[1].'</span>
+                                    <span style = "color: #008B9F; border-radius: 4px; margin: 4px;">:
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[0].'</span>
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[1].'</span>
                                 </div>';
         }
 

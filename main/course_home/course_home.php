@@ -546,23 +546,12 @@ if ($sessionId != 0) {
             $firstName = $userInfo['firstname'];
             $hours = gmdate("H",$timeSpentOnCourse);
             $minutes = gmdate("i",$timeSpentOnCourse);
-            $contentCounter .= '<span style="padding:5px; color: #008B9F;">'.
-                                    sprintf(get_lang('TimeInCourse'), $firstName).
-                                '</span>
-                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                    .$hours[0].
-                                '</span>
-                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                    .$hours[1].
-                                '</span>
-                                <span style = " color: #008B9F; border-radius: 4px; margin: 4px;">:
-                                </span>
-                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                    .$minutes[0].
-                                '</span>
-                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px; margin: -1px;">'
-                                    .$minutes[1].
-                                '</span>';
+            $contentCounter .= '<span style="padding:5px; color: #008B9F;">'.sprintf(get_lang('TimeInCourse'), $firstName).'</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">' .$hours[0].'</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$hours[1].'</span>
+                                <span style = "color: #008B9F; border-radius: 4px; margin: 4px;">:
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[0].'</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[1].'</span>';
 
             $htmlHeadXtra[] = '<script>
                 setInterval(function() {
@@ -576,7 +565,7 @@ if ($sessionId != 0) {
                             console.log("Error updating counter ");
                         }
                     })}
-                    ,1000);
+                    ,60000);
             </script>';
         }
 
