@@ -748,6 +748,41 @@ switch ($action) {
         }
 
         break;
+    case 'get_counter':
+        require_once __DIR__.'/../global.inc.php';
+        $userId = api_get_user_id();
+        $courseId = isset($_REQUEST['course_id']) ? (int) $_REQUEST['course_id'] : 0;
+        $sessionId = isset($_REQUEST['session_id']) ? (int) $_REQUEST['session_id'] : 0;
+
+        $contentCounter = '';
+        $showCourseTimeCounterOnSessions = api_get_configuration_value('course_home_show_time_counter');
+        $showCourseTimeCounterOnThisSession = SessionManager::getFilteredExtraFields($sessionId,['show_time_counter_on_course']);
+        $showCourseTimeSpent = false;
+
+        if (!empty($showCourseTimeCounterOnThisSession) && $showCourseTimeCounterOnThisSession[0]['value']) {
+            $showCourseTimeSpent = true;
+        }
+
+        if ($showCourseTimeCounterOnSessions && $sessionId != 0 && $showCourseTimeSpent) {
+            Event::eventCourseLoginUpdate($courseId, $userId, $sessionId, 0.08);
+
+            $timeSpentOnCourse = Tracking::get_time_spent_on_the_course($userId, $courseId, $sessionId);
+            $userInfo = api_get_user_info($user_id);
+            $firstName = $userInfo['firstname'];
+            $hours = gmdate("H",$timeSpentOnCourse);
+            $minutes = gmdate("i",$timeSpentOnCourse);
+            $contentCounter = '<div id="course_counter" style="text-align: right; font-size: 14px; margin-bottom: 10px; margin-right: 35px;">
+                                    <span style="padding:5px; color: #008B9F;">'.sprintf(get_lang('TimeInCourse'), $firstName).'</span>
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">' .$hours[0].'</span>
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$hours[1].'</span>
+                                    <span style = "color: #008B9F; border-radius: 4px; margin: 4px;">:
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[0].'</span>
+                                    <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[1].'</span>
+                                </div>';
+        }
+
+        echo $contentCounter;
+        break;
     default:
         echo '';
 }

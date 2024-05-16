@@ -527,7 +527,52 @@ if ($allow === true) {
     }
 }
 
-$content = '<div id="course_tools">'.$diagram.$content.'</div>';
+$showCourseTimeCounterOnSessions = api_get_configuration_value('course_home_show_time_counter');
+$showCourseTimeCounterOnThisSession = SessionManager::getFilteredExtraFields($sessionId,["show_time_counter_on_course"]);
+
+$showCourseTimeSpent = false;
+
+if (!empty($showCourseTimeCounterOnThisSession) && $showCourseTimeCounterOnThisSession[0]['value']) {
+    $showCourseTimeSpent = true;
+}
+
+$contentCounter = '';
+
+if ($sessionId != 0) {
+    $timeSpentOnCourse = Tracking::get_time_spent_on_the_course($user_id, $courseId, $sessionId);
+    $contentCounter = '<div id="course_counter" style="text-align: right; font-size: 14px; margin-bottom: 10px;margin-right: 35px;">';
+        if ($showCourseTimeCounterOnSessions && $showCourseTimeSpent) {
+            $userInfo = api_get_user_info($user_id);
+            $firstName = $userInfo['firstname'];
+            $hours = gmdate("H",$timeSpentOnCourse);
+            $minutes = gmdate("i",$timeSpentOnCourse);
+            $contentCounter .= '<span style="padding:5px; color: #008B9F;">'.sprintf(get_lang('TimeInCourse'), $firstName).'</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">' .$hours[0].'</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$hours[1].'</span>
+                                <span style = "color: #008B9F; border-radius: 4px; margin: 4px;">:
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[0].'</span>
+                                <span style = "background-color:#008B9F; color: white; border-radius: 4px; padding: 5px;">'.$minutes[1].'</span>';
+
+            $htmlHeadXtra[] = '<script>
+                setInterval(function() {
+                    $.ajax({
+                        type: "GET",
+                        url: "'.api_get_path(WEB_AJAX_PATH).'course_home.ajax.php?'.api_get_cidreq().'&a=get_counter&course_id='.$courseId.'&session_id='.$sessionId.'",
+                        success: function (data) {
+                            $("#course_counter").replaceWith(data);
+                        },
+                        error: function() {
+                            console.log("Error updating counter ");
+                        }
+                    })}
+                    ,60000);
+            </script>';
+        }
+
+    $contentCounter .= '</div>';
+}
+
+$content = $contentCounter.'<div id="course_tools">'.$diagram.$content.'</div>';
 
 // Deleting the objects
 Session::erase('_gid');

@@ -9076,4 +9076,5 @@ $CourseCodeDoesNotExist = "Este codigo de curso no existe";
 $HoursMinutesSeconds = "%02d h %02d m %02d s";
 $IfYourLPsAreScormsYouShouldSelectThemFromTheScorms = "Si sus lecciones de aprendizaje son paquetes scorm, debe seleccionar la carpeta correspondiente en la parte SCORM";
 $QuestionsWithNoAutomaticCorrection = "Preguntas sin corrección automática";
+$TimeInCourse = "Hola %s, tiempo en el curso : ";
 ?>
