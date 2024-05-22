@@ -40,15 +40,19 @@
             resizable: false,
             lang: '{{ elfinder_lang }}',
             handlers : {
-                sync : function (event, elfinderInstance){
-                    elfinderInstance.files().forEach(file => {
-                        if (file.name.includes("__0") && !file.name.includes("__" + sessionId+"__")) {
-                            $('#' + file.hash).hide();
+                sync : function (event, elfinderInstance) {
+                    let files = elfinderInstance.files();
+                    for (const key in files) {
+                        for (const subkey in files[key]) {
+                           if (subkey === "name") {
+                                 if (files[key][subkey].includes("__0") && !files[key][subkey].includes("__" + sessionId + "__")) {
+                                    $('#' + files[key].hash).hide();
+                                }
+                            }
                         }
-                    });
+                    }
                 }
             }
-
         }).elfinder('instance');
     });
 </script>
