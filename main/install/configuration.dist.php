@@ -2375,6 +2375,9 @@ INSERT INTO `extra_field` (`extra_field_type`, `field_type`, `variable`, `displa
 // they are only accessible during the active duration).
 //$_configuration['session_coach_access_after_duration_end'] = false;
 
+// Enable visibility options in session configuration
+//$_configuration['session_visibility_options_configuration'] = false;
+
 // Restrict the list of students to subscribe in the course session. And disable
 // registration for users in all courses from Resume Session page
 //$_configuration['session_course_users_subscription_limited_to_session_users'] = false;
