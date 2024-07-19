@@ -166,7 +166,7 @@ class ExtraFieldValue extends Model
             }
 
             $commentVariable = 'extra_'.$field_variable.'_comment';
-            $comment = isset($params[$commentVariable]) ? $params[$commentVariable] : null;
+            $comment = isset($params[$commentVariable]) ? $params[$commentVariable] : $extraFieldInfo['comment'];
             $dirPermissions = api_get_permissions_for_new_directories();
 
             switch ($extraFieldInfo['field_type']) {
